@@ -17,6 +17,7 @@ public:
 	sf::Vector2f GetPosition() { return hitBox.getPosition(); }
 	Collider GetCollider() { return Collider(hitBox); }
 
+	bool isShoot() { return shoot; }
 
 
 private:
@@ -32,6 +33,9 @@ private:
 	float jumpHeight;
 
 	bool showhitbox = false;
+	bool shoot = false;
+
+	sf::Clock spacebarClock;
 };
 
 	

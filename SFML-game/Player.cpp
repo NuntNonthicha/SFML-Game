@@ -1,7 +1,6 @@
 #include"Player.h"
 #include<iostream>
 
-
 Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeight, bool showhitbox) :
 	animation(texture, imageCount, switchTime)
 {
@@ -23,10 +22,7 @@ Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, 
 	hitBox.setOutlineColor(sf::Color::Green);
 	hitBox.setOutlineThickness(3.f);
 	body.setTexture(texture);
-	//
-	/*body.setOutlineThickness(1.0f);
-	body.setOutlineColor(sf::Color::Red);*/
-	//
+	spacebarClock.restart();
 }
 
 Player::~Player()
@@ -43,7 +39,6 @@ void Player::Update(float deltaTime)
 	//	body.setPosition(206.0f, 1690.0f);
 	//if (GetPosition().x > 500.0f)
 	//	body.setPosition(206.0f, 1690.0f);
-
 		
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		velocity.x -= 2 * speed * 2.0f;
@@ -55,10 +50,9 @@ void Player::Update(float deltaTime)
 		faceRight = true;
 		row = 1;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+	/*else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
 		velocity.x += 2 * speed * 2.0f;
-		row = 2;
-	}
+	}*/
 	else if (velocity.x == 0.0f) //if stop movement
 	{
 		row = 0;
@@ -67,6 +61,15 @@ void Player::Update(float deltaTime)
 	{
 		canJump = false;
 		velocity.y = -sqrtf(3.8f * 1000.0f * jumpHeight); //square root(2.0f * gravity * jumpHeight)
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && spacebarClock.getElapsedTime().asMilliseconds() > 1500)
+	{
+		shoot = true;
+		row = 2;
+		spacebarClock.restart();
+	}
+	else {
+		shoot = false;
 	}
 
 	velocity.y += 981.0f * deltaTime;

@@ -5,6 +5,7 @@
 #include"Platform.h"
 #include"Collider.h"
 #include<vector>
+#include"bullet.h"
 
 
 static const float VIEW_HEIGHT = 720.0f;
@@ -76,6 +77,8 @@ int main()
 	doorwarp.loadFromFile("door.png");
 	sf::Texture cactus; //กระบองเพชร
 	cactus.loadFromFile("cactus.png");
+	sf::Texture fire; //กระสุน
+	fire.loadFromFile("bullet.png");
 	
 
 
@@ -86,6 +89,7 @@ int main()
 	//////////////////////////////////////////////////////////////////////// Platform ////////////////////////////////////////////////////////////////////////
 	
 	std::vector<Platform> platforms;
+	std::vector<bullet> vbullet;
 
 	/////////////////////////////////////////////////// Platform 1  ////////////////////////////////////////////////////////
 
@@ -207,13 +211,23 @@ int main()
 				break;
 			}
 		}
-		printf("x = %.f  y = %.f\n", player.GetPosition().x, player.GetPosition().y);
+		//printf("x = %.f  y = %.f\n", player.GetPosition().x, player.GetPosition().y);
 		
 		player.Update(deltaTime);
-
+		
 		/////////////////////////////////////////////////////////check ชน blockcoin//////////////////////////////////////////////////////////////////////
 		sf::Vector2f direction;
 		int coin = 0; 
+
+		if (player.isShoot()) {
+			vbullet.push_back(bullet(&fire, sf::Vector2f(40.0f, 40.0f), 50.0f,player.GetPosition().x, player.GetPosition().y - 35));
+		}
+
+		for (bullet& b : vbullet)
+		{
+			b.Update(deltaTime);
+		}
+
 		for (Platform& platform : platforms) { //check collision platform
 			if (platform.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) {
 				player.OnCollision(direction);
@@ -247,6 +261,7 @@ int main()
 		window.draw(bg);
 		window.draw(bgwater);
 		window.draw(bg2);
+		
 		for (Platform& platform : platforms)
 		{
 			platform.Draw(window);
@@ -269,6 +284,12 @@ int main()
 		window.draw(warpPoint2); //test
 		/// 
 		player.Draw(window);
+
+		for (bullet b : vbullet)
+		{
+			b.Draw(window);
+		}
+
 		window.display();
 		window.clear(sf::Color(100, 100, 100)); //130 100 60 brown
 	}
