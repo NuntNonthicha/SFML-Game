@@ -1,12 +1,14 @@
 #include "bullet.h"
 #include<iostream>
 
-bullet::bullet(sf::Texture* texture, sf::Vector2f size,  float speed, float posx, float posy)
+bullet::bullet(sf::Texture* texture, sf::Vector2f size,  float speed, float posx, float posy, bool directionFire)
+	
 {
 	this->speed = speed;
 	body.setTexture(texture);
-	body.setSize(sf::Vector2f(30, 30));
+	body.setSize(sf::Vector2f(32, 32));
 	body.setPosition(sf::Vector2f(posx,posy));
+	faceRight = directionFire;
 }
 
 bullet::~bullet()
@@ -16,11 +18,17 @@ bullet::~bullet()
 void bullet::Update(float deltaTime)
 {
 	velocity.x = 0.0f;
-	velocity.x += 2 * speed * 4.0f;
+	if (faceRight) {
+		velocity.x += 2 * speed * 4.0f;
+	}
+	else {
 	
-
+		velocity.x -= 2 * speed * 4.0f;
+	}
 	body.move(velocity * deltaTime);
-	std::cout << body.getPosition().x << "   " << body.getPosition().y<<std::endl;
+	//std::cout << body.getPosition().x << "   " << body.getPosition().y<<std::endl; //คำสั่ง printf ค่า
+
+
 }
 
 void bullet::Draw(sf::RenderWindow& window)

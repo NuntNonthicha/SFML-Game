@@ -32,14 +32,7 @@ Player::~Player()
 void Player::Update(float deltaTime)
 {
 	velocity.x = 0.0f;
-	//std::cout << row << '\n';
-	//if (GetPosition().y > 1690.0f)
-	//	body.setPosition(206.0f, 1690.0f);
-	//if (GetPosition().x < -500.0f)
-	//	body.setPosition(206.0f, 1690.0f);
-	//if (GetPosition().x > 500.0f)
-	//	body.setPosition(206.0f, 1690.0f);
-		
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		velocity.x -= 2 * speed * 2.0f;
 		faceRight = false;
@@ -50,9 +43,6 @@ void Player::Update(float deltaTime)
 		faceRight = true;
 		row = 1;
 	}
-	/*else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
-		velocity.x += 2 * speed * 2.0f;
-	}*/
 	else if (velocity.x == 0.0f) //if stop movement
 	{
 		row = 0;
@@ -64,11 +54,11 @@ void Player::Update(float deltaTime)
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && spacebarClock.getElapsedTime().asMilliseconds() > 1500)
 	{
-		shoot = true;
 		row = 2;
+		shoot = true;
 		spacebarClock.restart();
 	}
-	else {
+	else{
 		shoot = false;
 	}
 

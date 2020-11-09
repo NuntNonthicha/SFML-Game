@@ -1,8 +1,6 @@
 #include "Collider.h"
 
-
-
-Collider::Collider(sf::RectangleShape& body) :
+Collider::Collider(sf::RectangleShape & body) :
 	body(body)
 {
 }
@@ -54,7 +52,7 @@ bool Collider::CheckCollision(Collider other, sf::Vector2f& direction, float pus
 		}
 		else
 		{
-				//push = 1.0f;
+			//push = 1.0f;
 			if (deltaY > 0.0f)
 			{
 				Move(0.0f, intersectY * (1.0f - push));
@@ -98,4 +96,4 @@ bool Collider::CheckCollision(Collider other)
 }
 
 
-	
+

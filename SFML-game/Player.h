@@ -18,6 +18,7 @@ public:
 	Collider GetCollider() { return Collider(hitBox); }
 
 	bool isShoot() { return shoot; }
+	bool faceRight;
 
 
 private:
@@ -26,7 +27,7 @@ private:
 	Animation animation;
 	unsigned int row; 
 	float speed;
-	bool faceRight;
+	
 
 	sf::Vector2f velocity;
 	bool canJump;
