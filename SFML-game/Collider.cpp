@@ -30,9 +30,7 @@ bool Collider::CheckCollision(Collider other, sf::Vector2f& direction, float pus
 		{
 			if (deltaX > 0.0f)
 			{
-				/*if (other.GetPosition().x < -1125.0f)
-					push = 1.0f;*/
-
+	
 				Move(intersectX * (1.0f - push), 0.0f);
 				other.Move(-intersectX * push, 0.0f);
 

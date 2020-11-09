@@ -7,7 +7,7 @@
 #include"bullet.h"
 #include "enemy.h"
 #include<vector>
-
+#include"Menu.h"
 
 static const float VIEW_HEIGHT = 720.0f;
 
@@ -22,10 +22,15 @@ void ResizeView(const sf::RenderWindow& window, sf::View& view)
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "SFML Tutorial", sf::Style::Close | sf::Style::Resize);
+
+	Menu menu(window.getSize().x, window.getSize().y);
 	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(VIEW_HEIGHT , VIEW_HEIGHT));
 
 	sf::Texture playerTexture; //knight player
 	playerTexture.loadFromFile("robot.png"); 
+
+	sf::Texture enemyTexture; //enemy player
+	enemyTexture.loadFromFile("enemy.png");
 
 
 	////////////////////////////////////////////////// Background////////////////////////////////////////////////////////////
@@ -80,10 +85,11 @@ int main()
 
 	Player player(&playerTexture, sf::Vector2u(8, 3), 0.1f, 100, 100, showHitBox);
 
-	enemy enemy(&playerTexture, sf::Vector2u(8,3),0.1f,0,115);
+	enemy enemy(&enemyTexture, sf::Vector2u(10,1),0.1f,0,115);
 
 	//////////////////////////////////////////////////////////////////////// Platform ////////////////////////////////////////////////////////////////////////
 	
+	/// vector //
 	std::vector<Platform> platforms;
 	std::vector<bullet> vbullet;
 
@@ -212,17 +218,22 @@ int main()
 		
 		sf::Vector2f direction;
 		
-
+		/////////////////////////////////////////////////////// check bullet /////////////////////////////////////////
 		if (player.isShoot()) {
-			vbullet.push_back(bullet(&ball, sf::Vector2f(32.0f, 32.0f), 50.0f, player.GetPosition().x, player.GetPosition().y - 35, player.faceRight));
+			vbullet.push_back(bullet(&ball, sf::Vector2f(32.0f, 32.0f), 0, 50.0f, player.GetPosition().x , player.GetPosition().y - 35, player.faceRight));
 		}
 
+		//Collider temp = enemy.GetCollider();
 		for (bullet& b : vbullet)
 		{
+			if (b.GetCollider().CheckCollision(enemy.GetCollider(), direction, 1.0f)) //check collision enemy
+				enemy.OnCollision(direction);
+		
 			b.Update(deltaTime);
 		}
-
-		/////////////////////////////////////////////////////////check ชน blockcoin//////////////////////////////////////////////////////////////////////
+		
+	
+		/////////////////////////////////////////////////////////check ชน //////////////////////////////////////////////////////////////////////
 		int coin = 0;
 		for (Platform& platform : platforms) { //check collision platform
 			if (platform.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) {
@@ -232,9 +243,10 @@ int main()
 					platforms.erase(platforms.begin() + coin);
 				}
 			}
-			if (platform.GetCollider().CheckCollision(enemy.GetCollider(), direction, 1.0f))//enemy
-				enemy.OnCollision(direction);
 			coin += 1;
+			if (platform.GetCollider().CheckCollision(enemy.GetCollider(), direction, 1.0f)) //check collision enemy
+				enemy.OnCollision(direction);
+				
 		}
 
 		/////////////////////////////////////////////////////////// ฉากกั้น ///////////////////////////////////////////////////////////////////////////
@@ -243,18 +255,15 @@ int main()
 		if (Partition2.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) //ฉากกั้นที่ 2 ล่องหน
 			player.OnCollision(direction);
 		
-
+		//// Player view ////
 		if (player.GetPosition().x >= -418 && player.GetPosition().x <= 2800) //ล็อคฉากที่ 1 ไม่ให้เลื่อนเกิน ด้านซ้าย && ด้านขวา (ให้อยุ่กลางจอ) && player.GetPosition().x <= 824
 		{
 			view.setCenter(player.GetPosition().x, player.GetPosition().y); //ล็อคฉากไม่เคลื่อนขึ้นบน ,0
 		}
-		/// 
-		/*sf::Vector2f winSize = view.getSize();
-		if (player.GetPosition().x <= winSize.x / 2 && player.GetPosition().y <= winSize.y / 2) {
-			view.setCenter(winSize.x / 2, winSize.y / 2);
-		}*/
-		/// 
-		/// 
+	
+	
+		window.clear(sf::Color(100, 100, 100)); //130 100 60 brown
+		menu.Draw(window); // menu 
 		window.setView(view);
 		window.draw(bg);
 		window.draw(bgwater);
@@ -291,8 +300,11 @@ int main()
 			b.Draw(window);
 		}
 
+		
 		window.display();
-		window.clear(sf::Color(100, 100, 100)); //130 100 60 brown
+		
+		
+	
 	}
 	return 0;
 }

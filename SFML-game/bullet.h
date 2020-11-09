@@ -3,17 +3,18 @@
 #include"Collider.h"
 #include"Animation.h"
 
+
 class bullet
 {
 public:
-	bullet(sf::Texture* texture, sf::Vector2f size, float speed, float posx, float posy, bool directionFire);
+	bullet(sf::Texture* texture, sf::Vector2f size, float switchTime , float speed, float posx, float posy, bool directionFire);
 	~bullet();
 
 	void Update(float deltaTime);
 	void Draw(sf::RenderWindow& window);
-	//void OnCollision(sf::Vector2f direction);
 	void setPosition(sf::Vector2f position);
-
+	void OnCollision(sf::Vector2f direction);
+	
 	sf::Vector2f GetPosition() { return body.getPosition(); }
 	Collider GetCollider() { return Collider(body); }
 
@@ -25,7 +26,6 @@ private:
 	sf::RectangleShape body;
 	float speed;
 	bool faceRight;
-	
 	
 };
 

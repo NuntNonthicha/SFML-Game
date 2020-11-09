@@ -34,12 +34,12 @@ void Player::Update(float deltaTime)
 	velocity.x = 0.0f;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		velocity.x -= 2 * speed * 2.0f;
+		velocity.x -= 1.5 * speed * 2.0f;
 		faceRight = false;
 		row = 1;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		velocity.x += 2 * speed * 2.0f;
+		velocity.x += 1.5 * speed * 2.0f;
 		faceRight = true;
 		row = 1;
 	}
@@ -50,8 +50,9 @@ void Player::Update(float deltaTime)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && canJump == true)
 	{
 		canJump = false;
-		velocity.y = -sqrtf(3.8f * 1000.0f * jumpHeight); //square root(2.0f * gravity * jumpHeight)
+		velocity.y = -sqrtf(3.8f * 981.0f * jumpHeight); //square root(2.0f * gravity * jumpHeight)
 	}
+	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && spacebarClock.getElapsedTime().asMilliseconds() > 1500)
 	{
 		row = 2;
@@ -86,6 +87,7 @@ void Player::OnCollision(sf::Vector2f direction)
 	{
 		//Collision on the left
 		velocity.x = 0.0f;
+
 	}
 	else if (direction.x > 0.0f)
 	{

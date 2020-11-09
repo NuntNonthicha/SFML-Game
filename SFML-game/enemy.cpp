@@ -6,8 +6,8 @@ animation(texture, imageCount, switchTime)
 {
 	this->speed = speed;
 	body.setTexture(texture);
-	body.setSize(sf::Vector2f(60, 100));
-	body.setOrigin(sf::Vector2f(30, 50));
+	body.setSize(sf::Vector2f(50, 90));
+	body.setOrigin(sf::Vector2f(25, 45));
 	body.setPosition(sf::Vector2f(posx, posy));
 }
 
@@ -19,7 +19,7 @@ void enemy::Update(float deltaTime)
 {
 	velocity.x = -50.0f;
 	velocity.y += 981.0f * deltaTime;
-	row = 1;
+	row = 0;
 	animation.Update(row, deltaTime, 0);
 	body.setTextureRect(animation.uvRect);
 	body.move(velocity * deltaTime);
@@ -28,6 +28,18 @@ void enemy::Update(float deltaTime)
 
 
 }
+
+void enemy::Draw(sf::RenderWindow& window)
+{
+	window.draw(body);
+}
+
+
+void enemy::setPosition(sf::Vector2f position)
+{
+	body.setPosition(position);
+}
+
 void enemy::OnCollision(sf::Vector2f direction)
 {
 	if (direction.x < 0.0f)
@@ -51,16 +63,4 @@ void enemy::OnCollision(sf::Vector2f direction)
 		velocity.y = 0.0f;
 	}
 }
-void enemy::Draw(sf::RenderWindow& window)
-{
-	window.draw(body);
-}
 
-//void bullet::OnCollision(sf::Vector2f direction)
-//{
-//}
-
-void enemy::setPosition(sf::Vector2f position)
-{
-	body.setPosition(position);
-}
