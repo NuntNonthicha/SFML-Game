@@ -21,9 +21,10 @@ void ResizeView(const sf::RenderWindow& window, sf::View& view)
 
 int main()
 {
+	int x = 0;
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "SFML Tutorial", sf::Style::Close | sf::Style::Resize);
 
-	Menu menu(window.getSize().x, window.getSize().y);
+	/*Menu menu(window.getSize().x, window.getSize().y);*/
 	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(VIEW_HEIGHT , VIEW_HEIGHT));
 
 	sf::Texture playerTexture; //knight player
@@ -34,6 +35,17 @@ int main()
 
 
 	////////////////////////////////////////////////// Background////////////////////////////////////////////////////////////
+
+	sf::Texture backgroundmenu; // bg menu
+	backgroundmenu.loadFromFile("bgmenu.png");
+	sf::RectangleShape bgmenu(sf::Vector2f(1080, 720));
+	bgmenu.setTexture(&backgroundmenu);
+
+	sf::Texture backgroundhowtoplay; // bg menu how to play
+	backgroundhowtoplay.loadFromFile("menuhowtoplay.png");
+	sf::RectangleShape bghowtoplay(sf::Vector2f(1080, 720));
+	bghowtoplay.setTexture(&backgroundhowtoplay);
+
 	sf::Texture background; // bg ฉากที่ 1 
 	background.loadFromFile("bg01.png");
 	sf::RectangleShape bg(sf::Vector2f(4000, 1000));
@@ -52,8 +64,9 @@ int main()
 	bg2.setPosition(sf::Vector2f(-800, -2200)); 
 	bg2.setTexture(&background2);
 
+	
 
-	/// bg1 floor+block
+	/// bg1+2 floor+block
 	sf::Texture floor;
 	floor.loadFromFile("floor01.png");
 	sf::Texture floor2;
@@ -78,9 +91,17 @@ int main()
 	cactus.loadFromFile("cactus.png");
 	sf::Texture ball; //กระสุน
 	ball.loadFromFile("ball.png");
-	
 
 
+	/// Menu button
+	sf::Texture buttonplay; //button menu play
+	buttonplay.loadFromFile("play.png");
+	sf::Texture buttonhowtoplay; //button menu howtoplay
+	buttonhowtoplay.loadFromFile("howtoplay.png");
+	sf::Texture buttonhighscore; //button menu highscore
+	buttonhighscore.loadFromFile("highscore.png");
+	sf::Texture buttonreturnmenu; //button return menu highscore to main menu
+	buttonreturnmenu.loadFromFile("returnmenu.png");
 	
 
 	Player player(&playerTexture, sf::Vector2u(8, 3), 0.1f, 100, 100, showHitBox);
@@ -198,6 +219,7 @@ int main()
 		if (deltaTime > 1.0f / 20.0f)
 			deltaTime = 1.0f / 20.0f;
 
+		
 		sf::Event evnt;
 		while (window.pollEvent(evnt))
 		{
@@ -211,96 +233,165 @@ int main()
 				break;
 			}
 		}
-		printf("x = %.f  y = %.f\n", player.GetPosition().x, player.GetPosition().y);
 		
-		player.Update(deltaTime);
-		
-		
-		sf::Vector2f direction;
-		
-		/////////////////////////////////////////////////////// check bullet /////////////////////////////////////////
-		if (player.isShoot()) {
-			vbullet.push_back(bullet(&ball, sf::Vector2f(32.0f, 32.0f), 0, 50.0f, player.GetPosition().x , player.GetPosition().y - 35, player.faceRight));
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////// หน้า Menu /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		///// ปุ่ม หน้า MENU ///////
+		sf::RectangleShape button1(sf::Vector2f(300, 150)); //button play
+		button1.setPosition(sf::Vector2f(380, 340));
+		button1.setTexture(&buttonplay);
+		sf::RectangleShape button2(sf::Vector2f(300, 150)); //button how to play
+		button2.setPosition(sf::Vector2f(220, 520));
+		button2.setTexture(&buttonhowtoplay);
+		sf::RectangleShape button3(sf::Vector2f(300, 150)); //button how to play
+		button3.setPosition(sf::Vector2f(550, 520));
+		button3.setTexture(&buttonhighscore);
+		sf::RectangleShape button4(sf::Vector2f(100, 50)); //button how to play
+		button4.setPosition(sf::Vector2f(980, 650));
+		button4.setTexture(&buttonreturnmenu);
+
+		if(x == 0)
+		{
+			
+			window.clear();
+			if (button1.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(window))))
+			{
+				button1.setFillColor(sf::Color::Green);
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+				{
+					button1.setFillColor(sf::Color::Yellow);
+					x = 3;
+				}
+				
+			}
+			else if (button2.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(window))))
+			{
+				button2.setFillColor(sf::Color::Green);
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+				{
+					button2.setFillColor(sf::Color::Yellow);
+					x = 1;
+				}
+
+			}
+			window.draw(bgmenu);
+			window.draw(button1);
+			window.draw(button2);
+			window.draw(button3);
 		}
 
-		//Collider temp = enemy.GetCollider();
-		for (bullet& b : vbullet)
+	//////////////////////////////////////////////////////////////////////////////////////////////////// หน้า How to play /////////////////////////////////////////////////////////////////////////////////////////////////////
+		if (x == 1)
 		{
-			if (b.GetCollider().CheckCollision(enemy.GetCollider(), direction, 1.0f)) //check collision enemy
-				enemy.OnCollision(direction);
-		
-			b.Update(deltaTime);
-		}
-		
-	
-		/////////////////////////////////////////////////////////check ชน //////////////////////////////////////////////////////////////////////
-		int coin = 0;
-		for (Platform& platform : platforms) { //check collision platform
-			if (platform.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) {
-				player.OnCollision(direction);
-				if (platform.getBlockType() == 1) { // 1 = ชน
-					printf("\n\coin");
-					platforms.erase(platforms.begin() + coin);
+			window.clear();
+			if (button4.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(window))))
+			{
+				button4.setFillColor(sf::Color::White);
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+				{
+					button4.setFillColor(sf::Color::Red);
+					x = 0;
 				}
 			}
-			coin += 1;
-			if (platform.GetCollider().CheckCollision(enemy.GetCollider(), direction, 1.0f)) //check collision enemy
-				enemy.OnCollision(direction);
-				
+			window.draw(bghowtoplay);
+			window.draw(button4);
 		}
 
-		/////////////////////////////////////////////////////////// ฉากกั้น ///////////////////////////////////////////////////////////////////////////
-		if (Partition.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) //ฉากกั้นที่ 1 ล่องหน
-			player.OnCollision(direction);
-		if (Partition2.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) //ฉากกั้นที่ 2 ล่องหน
-			player.OnCollision(direction);
-		
-		//// Player view ////
-		if (player.GetPosition().x >= -418 && player.GetPosition().x <= 2800) //ล็อคฉากที่ 1 ไม่ให้เลื่อนเกิน ด้านซ้าย && ด้านขวา (ให้อยุ่กลางจอ) && player.GetPosition().x <= 824
+	//////////////////////////////////////////////////////////////////////////////////////////////////// หน้า Start เข้า Game /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		if (x == 3)
 		{
-			view.setCenter(player.GetPosition().x, player.GetPosition().y); //ล็อคฉากไม่เคลื่อนขึ้นบน ,0
-		}
-	
-	
-		window.clear(sf::Color(100, 100, 100)); //130 100 60 brown
-		menu.Draw(window); // menu 
-		window.setView(view);
-		window.draw(bg);
-		window.draw(bgwater);
-		window.draw(bg2);
-		
-		for (Platform& platform : platforms)
-		{
-			platform.Draw(window);
-		}
-		
-		//////////////////////////////////////////////////////////check ชน WarpPoint ///////////////////////////////////////////////////////////////////////
+			printf("x = %.f  y = %.f\n", player.GetPosition().x, player.GetPosition().y);
 
-		if (player.GetCollider().CheckCollision(Collider(door))) { //ประตูในฉากที่ 1
-			player.setPosition(sf::Vector2f(-600, -75));
-		}
-		if (player.GetCollider().CheckCollision(Collider(warpPoint))) { //ประตูวาร์ปฉากที่ 1 ไปฉากที่ 2
-			player.setPosition(sf::Vector2f(-800, -1600));
-		}
-		if (player.GetCollider().CheckCollision(Collider(warpPoint2))) { //test
-			player.setPosition(sf::Vector2f(-500, -1500));
-		}
-		
-		window.draw(door);
-		window.draw(warpPoint);
-		window.draw(warpPoint2); //test
-		/// 
-		enemy.Update(deltaTime);
-		enemy.Draw(window);
+			player.Update(deltaTime);
 
-		player.Draw(window);
 
-		for (bullet& b : vbullet) 
-		{
-			b.Draw(window);
+			sf::Vector2f direction;
+
+			/////////////////////////////////////////////////////// check bullet /////////////////////////////////////////
+			if (player.isShoot()) {
+				vbullet.push_back(bullet(&ball, sf::Vector2f(32.0f, 32.0f), 0, 50.0f, player.GetPosition().x, player.GetPosition().y - 35, player.faceRight));
+			}
+
+			//Collider temp = enemy.GetCollider();
+			for (bullet& b : vbullet)
+			{
+				if (b.GetCollider().CheckCollision(enemy.GetCollider(), direction, 1.0f)) //check collision enemy
+					enemy.OnCollision(direction);
+
+				b.Update(deltaTime);
+			}
+
+
+			/////////////////////////////////////////////////////////check ชน //////////////////////////////////////////////////////////////////////
+			int coin = 0;
+			for (Platform& platform : platforms) { //check collision platform
+				if (platform.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) {
+					player.OnCollision(direction);
+					if (platform.getBlockType() == 1) { // 1 = ชน
+						printf("\n\coin");
+						platforms.erase(platforms.begin() + coin);
+					}
+				}
+				coin += 1;
+				if (platform.GetCollider().CheckCollision(enemy.GetCollider(), direction, 1.0f)) //check collision enemy
+					enemy.OnCollision(direction);
+
+			}
+
+			/////////////////////////////////////////////////////////// ฉากกั้น ///////////////////////////////////////////////////////////////////////////
+			if (Partition.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) //ฉากกั้นที่ 1 ล่องหน
+				player.OnCollision(direction);
+			if (Partition2.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) //ฉากกั้นที่ 2 ล่องหน
+				player.OnCollision(direction);
+
+			//// Player view ////
+			if (player.GetPosition().x >= -418 && player.GetPosition().x <= 2800) //ล็อคฉากที่ 1 ไม่ให้เลื่อนเกิน ด้านซ้าย && ด้านขวา (ให้อยุ่กลางจอ) && player.GetPosition().x <= 824
+			{
+				view.setCenter(player.GetPosition().x, player.GetPosition().y); //ล็อคฉากไม่เคลื่อนขึ้นบน ,0
+			}
+
+
+			window.clear(sf::Color(100, 100, 100)); //130 100 60 brown
+			//menu.Draw(window); // menu 
+			window.setView(view);
+			window.draw(bg);
+			window.draw(bgwater);
+			window.draw(bg2);
+
+			for (Platform& platform : platforms)
+			{
+				platform.Draw(window);
+			}
+
+			//////////////////////////////////////////////////////////check ชน WarpPoint ///////////////////////////////////////////////////////////////////////
+
+			if (player.GetCollider().CheckCollision(Collider(door))) { //ประตูในฉากที่ 1
+				player.setPosition(sf::Vector2f(-600, -75));
+			}
+			if (player.GetCollider().CheckCollision(Collider(warpPoint))) { //ประตูวาร์ปฉากที่ 1 ไปฉากที่ 2
+				player.setPosition(sf::Vector2f(-800, -1600));
+			}
+			if (player.GetCollider().CheckCollision(Collider(warpPoint2))) { //test
+				player.setPosition(sf::Vector2f(-500, -1500));
+			}
+
+			window.draw(door);
+			window.draw(warpPoint);
+			window.draw(warpPoint2); //test
+			/// 
+			enemy.Update(deltaTime);
+			enemy.Draw(window);
+
+			player.Draw(window);
+
+			for (bullet& b : vbullet)
+			{
+				b.Draw(window);
+			}
+
 		}
-
-		
 		window.display();
 		
 		

@@ -16,6 +16,6 @@ public:
 private:
 	int selectedItem = 0;
 	sf::Font font;
-	sf::Text menu[4];
+	sf::Text menu[MAX_ITEMS];
 
 };
