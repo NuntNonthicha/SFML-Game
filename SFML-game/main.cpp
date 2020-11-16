@@ -46,6 +46,12 @@ int main()
 	sf::RectangleShape bghowtoplay(sf::Vector2f(1080, 720));
 	bghowtoplay.setTexture(&backgroundhowtoplay);
 
+	sf::Texture backgroundhighscore; // bg menu high score
+	backgroundhighscore.loadFromFile("menuhighscore.png");
+	sf::RectangleShape bghighscore(sf::Vector2f(1080, 720));
+	bghighscore.setTexture(&backgroundhighscore);
+
+
 	sf::Texture background; // bg ฉากที่ 1 
 	background.loadFromFile("bg01.png");
 	sf::RectangleShape bg(sf::Vector2f(4000, 1000));
@@ -64,6 +70,13 @@ int main()
 	bg2.setPosition(sf::Vector2f(-800, -2200)); 
 	bg2.setTexture(&background2);
 
+	sf::Texture background3; // bg ฉากที่ 3
+	background3.loadFromFile("bg03.png");
+	sf::RectangleShape bg3(sf::Vector2f(4000, 1000));
+	bg3.setPosition(sf::Vector2f(-800, -3600));
+	bg3.setTexture(&background3);
+
+
 	
 
 	/// bg1+2 floor+block
@@ -71,6 +84,8 @@ int main()
 	floor.loadFromFile("floor01.png");
 	sf::Texture floor2;
 	floor2.loadFromFile("floor02.png");
+	sf::Texture floor3;
+	floor3.loadFromFile("floor03.png");
 	sf::Texture block;
 	block.loadFromFile("block.png");
 	sf::Texture block02;
@@ -116,7 +131,7 @@ int main()
 
 	/////////////////////////////////////////////////// Platform 1  ////////////////////////////////////////////////////////
 
-	Platform Partition(&block, sf::Vector2f(40.0f, 2143.0f), sf::Vector2f(-760.0f, 0.0f), 0, showHitBox); //ฉากกั้นของฉากที่ 1 
+	Platform Partition(&block, sf::Vector2f(40.0f, 2143.0f), sf::Vector2f(-760.0f, 0.0f), 0, showHitBox); //ฉากกั้นของฉากที่ 1
 
 	platforms.push_back(Platform(&block, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(-180.0f, 30.0f), 0, showHitBox)); //block1
 	float tmp = 0;
@@ -160,10 +175,11 @@ int main()
 	platforms.push_back(Platform(&heart, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(2250.0f, -280.0f), 1, showHitBox)); //heart
 
 	
-	//// Platform background /////
+	//// Platform background  พื้นฉาก /////
 	platforms.push_back(Platform(&floor, sf::Vector2f(4000.0f, 400.0f), sf::Vector2f(500.0f, 400.0f),0, showHitBox)); //พื้นฉากที่ 1
 	platforms.push_back(Platform(&floor, sf::Vector2f(4000.0f, 400.0f), sf::Vector2f(4700.0f, 400.0f),0, showHitBox)); //พื้นฉากที่ 1 หลังน้ำ
 	platforms.push_back(Platform(&floor2, sf::Vector2f(8000.0f, 400.0f), sf::Vector2f(-500.0f, -1000.0f),0, showHitBox)); //พื้นฉากที่ 2
+	platforms.push_back(Platform(&floor3, sf::Vector2f(4000.0f, 400.0f), sf::Vector2f(-1500.0f, -2400.0f), 0, showHitBox)); //พื้นฉากที่ 3
 	
 
 	/////////////////////////////////////////////////// Platform 2  ///////////////////////////////////////////////////////////////////////////////
@@ -244,7 +260,7 @@ int main()
 		sf::RectangleShape button2(sf::Vector2f(300, 150)); //button how to play
 		button2.setPosition(sf::Vector2f(220, 520));
 		button2.setTexture(&buttonhowtoplay);
-		sf::RectangleShape button3(sf::Vector2f(300, 150)); //button how to play
+		sf::RectangleShape button3(sf::Vector2f(300, 150)); //button high score
 		button3.setPosition(sf::Vector2f(550, 520));
 		button3.setTexture(&buttonhighscore);
 		sf::RectangleShape button4(sf::Vector2f(100, 50)); //button how to play
@@ -275,6 +291,16 @@ int main()
 				}
 
 			}
+			else if (button3.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(window))))
+			{
+				button3.setFillColor(sf::Color::Green);
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+				{
+					button3.setFillColor(sf::Color::Yellow);
+					x = 2;
+				}
+
+			}
 			window.draw(bgmenu);
 			window.draw(button1);
 			window.draw(button2);
@@ -287,16 +313,35 @@ int main()
 			window.clear();
 			if (button4.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(window))))
 			{
-				button4.setFillColor(sf::Color::White);
+				button4.setFillColor(sf::Color::Yellow);
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 				{
-					button4.setFillColor(sf::Color::Red);
+					button4.setFillColor(sf::Color::Blue);
 					x = 0;
 				}
 			}
 			window.draw(bghowtoplay);
 			window.draw(button4);
 		}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////// หน้า High score /////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		if (x == 2)
+		{
+			window.clear();
+			if (button4.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(window))))
+			{
+				button4.setFillColor(sf::Color::Yellow);
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+				{
+					button4.setFillColor(sf::Color::Blue);
+					x = 0;
+				}
+			}
+			window.draw(bghighscore);
+			window.draw(button4);
+		}
+
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////// หน้า Start เข้า Game /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -359,6 +404,7 @@ int main()
 			window.draw(bg);
 			window.draw(bgwater);
 			window.draw(bg2);
+			window.draw(bg3);
 
 			for (Platform& platform : platforms)
 			{
@@ -373,13 +419,17 @@ int main()
 			if (player.GetCollider().CheckCollision(Collider(warpPoint))) { //ประตูวาร์ปฉากที่ 1 ไปฉากที่ 2
 				player.setPosition(sf::Vector2f(-800, -1600));
 			}
-			if (player.GetCollider().CheckCollision(Collider(warpPoint2))) { //test
+			if (player.GetCollider().CheckCollision(Collider(warpPoint2))) { //test 1 ไป 2 สี่เหลี่ยมสีเเดง
 				player.setPosition(sf::Vector2f(-500, -1500));
+			}
+			if (player.GetCollider().CheckCollision(Collider(warpPoint3))) { //ประตูวาร์ปฉากที่ 2 ไปฉากที่ 3
+				player.setPosition(sf::Vector2f(-800, -3500));
 			}
 
 			window.draw(door);
 			window.draw(warpPoint);
 			window.draw(warpPoint2); //test
+			window.draw(warpPoint3);
 			/// 
 			enemy.Update(deltaTime);
 			enemy.Draw(window);
