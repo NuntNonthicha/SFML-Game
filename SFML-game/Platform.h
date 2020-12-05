@@ -9,17 +9,20 @@ public:
 	~Platform();
 
 	void Draw(sf::RenderWindow& window);
-	Collider GetCollider() { return Collider(hitBox); }
+	Collider GetCollider() { return Collider(body); }
 
 	void setTexture(sf::Texture* texture);
 
 	int getBlockType();
 
-private:
 	sf::RectangleShape body;
+
+private:
+	
 	int blockType = 0;
 	bool showHitbox = false;
 	sf::RectangleShape hitBox;
+	
 
 };
 

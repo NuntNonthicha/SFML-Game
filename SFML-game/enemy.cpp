@@ -9,10 +9,31 @@ animation(texture, imageCount, switchTime)
 	body.setSize(sf::Vector2f(50, 90));
 	body.setOrigin(sf::Vector2f(25, 45));
 	body.setPosition(sf::Vector2f(posx, posy));
+
+	enemyHitbox.setPosition(body.getPosition());
+	enemyHitbox.setFillColor(sf::Color::Transparent);
+	enemyHitbox.setOrigin(sf::Vector2f(25, 45));
+	enemyHitbox.setSize(sf::Vector2f(50.f, 50.f));
 }
 
 enemy::~enemy()
 {
+}
+
+bool enemy::updateBulletCollision(bullet* bullet)
+{
+	if (bullet->GetCollider().CheckCollision(this->GetCollider()))
+	{
+		//hpdown++;
+		//count++;
+		//row = 1;
+		body.setPosition(-1000.0f, 350.0f);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void enemy::Update(float deltaTime)
@@ -25,12 +46,14 @@ void enemy::Update(float deltaTime)
 	body.move(velocity * deltaTime);
 
 	//std::cout << body.getPosition().x << "   " << body.getPosition().y<<std::endl; //คำสั่ง printf ค่า
-
+	enemyHitbox.setPosition(body.getPosition());
 
 }
 
+
 void enemy::Draw(sf::RenderWindow& window)
 {
+	window.draw(enemyHitbox);
 	window.draw(body);
 }
 
@@ -63,4 +86,16 @@ void enemy::OnCollision(sf::Vector2f direction)
 		velocity.y = 0.0f;
 	}
 }
+
+const sf::FloatRect enemy::getEnemyGloabalbounds() const
+{
+	return this->enemyHitbox.getGlobalBounds();
+}
+
+const sf::Vector2f& enemy::getPosition() const
+{
+	return this->body.getPosition();
+}
+
+
 

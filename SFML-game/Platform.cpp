@@ -25,9 +25,9 @@ void Platform::Draw(sf::RenderWindow& window)
 {
  
     window.draw(body);
-    if (showHitbox && blockType == 1) {
+   /* if (showHitbox && blockType == 1) {
         window.draw(hitBox);
-    }
+    }*/
 }
 
 void Platform::setTexture(sf::Texture* texture)

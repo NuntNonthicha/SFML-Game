@@ -23,6 +23,11 @@ Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, 
 	hitBox.setOutlineThickness(3.f);
 	body.setTexture(texture);
 	spacebarClock.restart();
+
+	playerHitbox.setPosition(hitBox.getPosition());
+	playerHitbox.setFillColor(sf::Color::Transparent);
+	playerHitbox.setSize(sf::Vector2f(40.f, 80.f));
+	playerHitbox.setOrigin(hitBox.getSize() / 2.f);
 }
 
 Player::~Player()
@@ -69,11 +74,15 @@ void Player::Update(float deltaTime)
 	body.setTextureRect(animation.uvRect);
 	hitBox.move(velocity * deltaTime);
 	body.setPosition(hitBox.getPosition());
+	playerHitbox.setPosition(hitBox.getPosition());
 }
 
 void Player::Draw(sf::RenderWindow& window)
 {
+	window.draw(playerHitbox);
+
 	window.draw(body);
+
 	if (this->showhitbox) {
 		window.draw(hitBox);
 	}
@@ -111,3 +120,16 @@ void Player::setPosition(sf::Vector2f position)
 {
 	this->hitBox.setPosition(position);
 }
+
+const sf::FloatRect Player::getPlayerGlobalbounds() const
+{
+	return this->playerHitbox.getGlobalBounds();
+}
+
+const sf::Vector2f& Player::getPosition() const
+{
+	return this->body.getPosition();
+}
+
+
+

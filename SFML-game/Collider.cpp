@@ -3,6 +3,7 @@
 Collider::Collider(sf::RectangleShape & body) :
 	body(body)
 {
+
 }
 
 
@@ -91,6 +92,11 @@ bool Collider::CheckCollision(Collider other)
 		return true;
 	}
 	return false;
+}
+
+const sf::FloatRect Collider::getCollisionHitbox() const
+{
+	return this->HITBOX.getGlobalBounds();
 }
 
 

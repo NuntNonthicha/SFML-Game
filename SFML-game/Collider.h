@@ -17,5 +17,9 @@ public:
 private:
 	sf::RectangleShape& body;
 
+	sf::RectangleShape HITBOX;
+
+	const sf::FloatRect getCollisionHitbox() const;
+
 };
 

@@ -17,17 +17,24 @@ public:
 	sf::Vector2f GetPosition() { return hitBox.getPosition(); }
 	Collider GetCollider() { return Collider(hitBox); }
 
+	const sf::FloatRect getPlayerGlobalbounds() const;
+
 	bool isShoot() { return shoot; }
 	bool faceRight;
-
 
 private:
 	sf::RectangleShape body;
 	sf::RectangleShape hitBox;
+
+	sf::RectangleShape playerHitbox;
+
+	
 	Animation animation;
 	unsigned int row; 
 	float speed;
-	
+
+
+	const sf::Vector2f& getPosition() const;
 
 	sf::Vector2f velocity;
 	bool canJump;

@@ -37,6 +37,11 @@ void bullet::Draw(sf::RenderWindow& window)
 }
 
 
+void bullet::del()
+{
+	body.setPosition(NULL - 100, NULL - 100);
+}
+
 void bullet::setPosition(sf::Vector2f position)
 {
 	body.setPosition(position);
