@@ -28,7 +28,6 @@ private:
 
 	sf::RectangleShape playerHitbox;
 
-	
 	Animation animation;
 	unsigned int row; 
 	float speed;

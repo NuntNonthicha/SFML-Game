@@ -9,10 +9,9 @@ Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, 
 	this->showhitbox = showhitbox;
 	row = 0;
 	faceRight = true;
-	
 
 	canJump = true;
-	body.setSize(sf::Vector2f(70.0f, 100.0f));
+	body.setSize(sf::Vector2f(80.0f, 100.0f));
 	hitBox.setSize(sf::Vector2f(40.f, 80.0f));
 	body.setOrigin(body.getSize() / 2.f);
 	hitBox.setOrigin(hitBox.getSize()/ 2.f);

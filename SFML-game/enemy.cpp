@@ -1,14 +1,16 @@
 #include "enemy.h"
 #include<iostream>
 
-enemy::enemy(sf::Texture* texture,sf::Vector2u imageCount,float switchTime, float posx, float posy):
+enemy::enemy(sf::Texture* texture,sf::Vector2u imageCount,float switchTime, float posx, float posy , float speed):
 animation(texture, imageCount, switchTime)
 {
 	this->speed = speed;
+	this->faceRight = false;
 	body.setTexture(texture);
-	body.setSize(sf::Vector2f(50, 90));
-	body.setOrigin(sf::Vector2f(25, 45));
+	body.setSize(sf::Vector2f(50, 70));
+	body.setOrigin(sf::Vector2f(25, 35));
 	body.setPosition(sf::Vector2f(posx, posy));
+
 
 	enemyHitbox.setPosition(body.getPosition());
 	enemyHitbox.setFillColor(sf::Color::Transparent);
@@ -27,6 +29,7 @@ bool enemy::updateBulletCollision(bullet* bullet)
 		//hpdown++;
 		//count++;
 		//row = 1;
+
 		body.setPosition(-1000.0f, 350.0f);
 		return true;
 	}
@@ -38,10 +41,11 @@ bool enemy::updateBulletCollision(bullet* bullet)
 
 void enemy::Update(float deltaTime)
 {
-	velocity.x = -50.0f;
+	//velocity.x = -50.0f;
+	velocity.x = -speed;
 	velocity.y += 981.0f * deltaTime;
 	row = 0;
-	animation.Update(row, deltaTime, 0);
+	animation.Update(row, deltaTime, faceRight);
 	body.setTextureRect(animation.uvRect);
 	body.move(velocity * deltaTime);
 
@@ -68,12 +72,14 @@ void enemy::OnCollision(sf::Vector2f direction)
 	if (direction.x < 0.0f)
 	{
 		//Collision on the left
-		velocity.x = 0.0f;
+		speed = speed + 200.0f;
+		faceRight = false;
 	}
 	else if (direction.x > 0.0f)
 	{
 		//Collision on the right
-		velocity.x = 0.0f;
+		speed = speed - 200.0f;
+		faceRight = true;
 	}
 	if (direction.y < 0.0f)
 	{
@@ -96,6 +102,7 @@ const sf::Vector2f& enemy::getPosition() const
 {
 	return this->body.getPosition();
 }
+
 
 
 

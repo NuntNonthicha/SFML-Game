@@ -7,7 +7,7 @@
 class enemy
 {
 public:
-	enemy(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float posx, float posy);
+	enemy(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float posx, float posy, float speed);
 	~enemy();
 
 	bool updateBulletCollision(bullet* bullet);
@@ -15,6 +15,7 @@ public:
 	void Draw(sf::RenderWindow& window);
 	void setPosition(sf::Vector2f position);
 	void OnCollision(sf::Vector2f direction);
+
 
 	sf::Vector2f GetPosition() { return body.getPosition(); }
 	Collider GetCollider() { return Collider(body); }
