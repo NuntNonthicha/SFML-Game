@@ -62,7 +62,7 @@ int main()
 	////////////////////////////////////////////////// Background////////////////////////////////////////////////////////////
 
 	sf::Texture backgroundmenu; // bg menu
-	backgroundmenu.loadFromFile("bgmenu.png");
+	backgroundmenu.loadFromFile("bgmenu2.png");
 	sf::RectangleShape bgmenu(sf::Vector2f(1080, 720));
 	bgmenu.setTexture(&backgroundmenu);
 
@@ -107,6 +107,12 @@ int main()
 	bg4.setPosition(sf::Vector2f(-800, -5150));
 	bg4.setTexture(&background4);
 
+	sf::Texture background5; // bg ฉากที่ 5
+	background5.loadFromFile("bg5.png");
+	sf::RectangleShape bg5(sf::Vector2f(4000, 1000));
+	bg5.setPosition(sf::Vector2f(-800, -6600));
+	bg5.setTexture(&background5);
+
 	/// bg1+2 floor+block
 	sf::Texture floor;
 	floor.loadFromFile("floor01.png");
@@ -116,12 +122,18 @@ int main()
 	floor3.loadFromFile("floor03.png");
 	sf::Texture floor4;
 	floor4.loadFromFile("floor04.png");
+	sf::Texture floor5;
+	floor5.loadFromFile("floor05.png");
 	sf::Texture block;
 	block.loadFromFile("block.png");
+	sf::Texture block01;
+	block01.loadFromFile("block01.png");
 	sf::Texture block02;
 	block02.loadFromFile("block02.png");
 	sf::Texture block03;
 	block03.loadFromFile("block03.png");
+	sf::Texture block04;
+	block04.loadFromFile("block04.png");
 	sf::Texture blockcoin;
 	blockcoin.loadFromFile("blockcoin.png");
 	sf::Texture brick; //อิฐขั้นบันได
@@ -140,6 +152,8 @@ int main()
 	doorwarp2.loadFromFile("door2.png");
 	sf::Texture doorwarp3; //ประตูวาร์ป3
 	doorwarp3.loadFromFile("door3.png");
+	sf::Texture doorwarp4; //ประตูวาร์ป4
+	doorwarp4.loadFromFile("door4.png");
 	sf::Texture cactus; //กระบองเพชร
 	cactus.loadFromFile("cactus.png");
 	sf::Texture iceblock; //ice block เลื่อน
@@ -166,14 +180,12 @@ int main()
 	Player player(&playerTexture, sf::Vector2u(8, 3), 0.1f, 100, 100, showHitBox);
 
 	///  Enemy ในฉากที่ 1
-	enemy enemy1(&enemyTexture3, sf::Vector2u(6, 1), 0.1f, 600, 115 , 100.0f); //enemy bears
-	enemy enemy2(&enemyTexture3, sf::Vector2u(6, 1), 0.1f, 700, 115, 100.0f);
+	//enemy enemy1(&enemyTexture3, sf::Vector2u(6, 1), 0.1f, 600, 115 , 100.0f); //enemy bears
+	//enemy enemy2(&enemyTexture3, sf::Vector2u(6, 1), 0.1f, 700, 115, 100.0f);
 	enemy enemy3(&enemyTexture3, sf::Vector2u(6, 1), 0.1f, 1300, 115, 100.0f);
 	enemy enemy4(&enemyTexture3, sf::Vector2u(6, 1), 0.1f, 2160, 115, 100.0f);
 
-
 	
-
 
 	//////////////////////////////////////////////////////////////////////// Platform ////////////////////////////////////////////////////////////////////////
 	
@@ -189,9 +201,6 @@ int main()
 
 	Platform Partition(&block, sf::Vector2f(40.0f, 2143.0f), sf::Vector2f(-760.0f, 0.0f), 0, showHitBox); //ฉากกั้นของฉากที่ 1
 
-	Platform Bmap1(&block, sf::Vector2f(100.0f, 60.0f), sf::Vector2f(-200.0f,  0.0f), 0, showHitBox);
-	
-	
 	platforms.push_back(Platform(&block, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(-180.0f, 30.0f), 0, showHitBox)); //block1
 	float tmp = 0;
 	for (float i=0;i<5;i++) //loop block 
@@ -239,13 +248,16 @@ int main()
 	platforms.push_back(Platform(&floor, sf::Vector2f(4000.0f, 400.0f), sf::Vector2f(4700.0f, 400.0f),0, showHitBox)); //พื้นฉากที่ 1 หลังน้ำ
 	platforms.push_back(Platform(&floor2, sf::Vector2f(8000.0f, 400.0f), sf::Vector2f(-500.0f, -1000.0f),0, showHitBox)); //พื้นฉากที่ 2
 	platforms.push_back(Platform(&floor3, sf::Vector2f(16000.0f, 400.0f), sf::Vector2f(-1500.0f, -2400.0f), 0, showHitBox)); //พื้นฉากที่ 3
-	platforms.push_back(Platform(&floor4, sf::Vector2f(16000.0f, 400.0f), sf::Vector2f(-2500.0f, -4000.0f), 0, showHitBox)); //พื้นฉากที่ 4
+	platforms.push_back(Platform(&floor4, sf::Vector2f(16000.0f, 400.0f), sf::Vector2f(-1000.0f, -4000.0f), 0, showHitBox)); //พื้นฉากที่ 4
+	platforms.push_back(Platform(&floor5, sf::Vector2f(16000.0f, 400.0f), sf::Vector2f(-1000.0f, -5400.0f), 0, showHitBox)); //พื้นฉากที่ 4
 
 	
 
 	/////////////////////////////////////////////////// Platform 2  ///////////////////////////////////////////////////////////////////////////////
 
 	Platform Partition2(&block, sf::Vector2f(40.0f, 200.0f), sf::Vector2f(-760.0f, -1350.0f), 0, showHitBox); //ฉากกั้นของฉากที่ 2 
+
+	Platform Bmap2(&block02, sf::Vector2f(100.0f, 60.0f), sf::Vector2f(2200.0f, -1500.0f), 0, showHitBox); // block เลื่อนขึ้นเเละลง
 
 	for (float i = 0; i < 5; i++) //loop block 
 	{
@@ -290,7 +302,6 @@ int main()
 		tmp += 20;
 	}
 
-	
 	platforms.push_back(Platform(&stalagmite, sf::Vector2f(150.0f, 350.0f), sf::Vector2f(-500.0f , -3425.0f), 0, showHitBox));
 	platforms.push_back(Platform(&stalagmite, sf::Vector2f(150.0f, 450.0f), sf::Vector2f(-200.0f , -3430.0f), 0, showHitBox));
 	platforms.push_back(Platform(&stalagmite, sf::Vector2f(250.0f, 600.0f), sf::Vector2f(200.0f, -3330.0f), 0, showHitBox));
@@ -300,7 +311,7 @@ int main()
 	platforms.push_back(Platform(&stalagmite, sf::Vector2f(200.0f, 600.0f), sf::Vector2f(1300.0f, -3330.0f), 0, showHitBox));
 	platforms.push_back(Platform(&ice, sf::Vector2f(150.0f, 400.0f), sf::Vector2f(1200.0f, -2650.0f), 0, showHitBox)); //ice block
 	Platform BlockSlide2(&iceblock, sf::Vector2f(100.0f, 100.0f), sf::Vector2f(1400.0f, -2650.0f), 0, showHitBox); //block เลื่อน2
-	platforms.push_back(Platform(&ice, sf::Vector2f(150.0f, 450.0f), sf::Vector2f(1800.0f, -2650.0f), 0, showHitBox)); //ice block2
+	platforms.push_back(Platform(&ice, sf::Vector2f(130.0f, 450.0f), sf::Vector2f(1800.0f, -2650.0f), 0, showHitBox)); //ice block2
 	platforms.push_back(Platform(&ice, sf::Vector2f(150.0f, 200.0f), sf::Vector2f(2300.0f, -2650.0f), 0, showHitBox)); //ice block3
 
 	platforms.push_back(Platform(&heart, sf::Vector2f(100.0f, 200.0f), sf::Vector2f(650.0f, -2800.0f), 1, showHitBox));
@@ -309,12 +320,34 @@ int main()
 
 	/////////////////////////////////////////////////// Platform 4  ////////////////////////////////////////////////////////
 
-	Platform Partition4(&block, sf::Vector2f(40.0f, 500.0f), sf::Vector2f(-750.0f, -4500.0f), 0, showHitBox); //ฉากกั้นของฉากที่ 4
+	Platform Partition4(&block01, sf::Vector2f(40.0f, 500.0f), sf::Vector2f(-750.0f, -4500.0f), 0, showHitBox); //ฉากกั้นของฉากที่ 4
 
+	Platform Bmap4(&floor2, sf::Vector2f(100.0f, 60.0f), sf::Vector2f(1050.0f , -4300.0f), 0, showHitBox); // block เลื่อนขึ้นเเละลง
+	Platform Bmap5(&floor2, sf::Vector2f(100.0f, 60.0f), sf::Vector2f(1650.0f , -4300.0f), 0, showHitBox); // block เลื่อนขึ้นเเละลง
 	
-	/////////////////////////////////////////////////// Platform 5  ////////////////////////////////////////////////////////
+	for (float i = 0; i < 4; i++) //loop block 
+	{
 
-	// Partition4(&block, sf::Vector2f(40.0f, 500.0f), sf::Vector2f(-750.0f, -4500.0f), 0, showHitBox); //ฉากกั้นของฉากที่ 4
+		platforms.push_back(Platform(&block04, sf::Vector2f(120.0f, 40.0f), sf::Vector2f( -700.0f + tmp , -4300.0f ), 0, showHitBox)); //block1 
+		platforms.push_back(Platform(&block04, sf::Vector2f(120.0f, 40.0f), sf::Vector2f( -600.0f + tmp , -4350.0f ), 0, showHitBox)); //block2
+		platforms.push_back(Platform(&block04, sf::Vector2f(120.0f, 40.0f), sf::Vector2f( -500.0f + tmp , -4400.0f ), 0, showHitBox)); //block3
+		platforms.push_back(Platform(&block04, sf::Vector2f(120.0f, 40.0f), sf::Vector2f(-400.0f + tmp, -4450.0f), 0, showHitBox)); //block4
+		platforms.push_back(Platform(&block04, sf::Vector2f(120.0f, 40.0f), sf::Vector2f(-300.0f + tmp, -4500.0f), 0, showHitBox)); //block4
+		tmp += 0;
+	}
+
+	platforms.push_back(Platform(&block04, sf::Vector2f(100.0f, 320.0f), sf::Vector2f(900.0f, -4360.0f), 0, showHitBox));
+	platforms.push_back(Platform(&block04, sf::Vector2f(100.0f, 320.0f), sf::Vector2f(1200.0f, -4360.0f), 0, showHitBox));
+	platforms.push_back(Platform(&block04, sf::Vector2f(100.0f, 320.0f), sf::Vector2f(1500.0f, -4360.0f), 0, showHitBox));
+	platforms.push_back(Platform(&block04, sf::Vector2f(100.0f, 320.0f), sf::Vector2f(1800.0f, -4360.0f), 0, showHitBox));
+	platforms.push_back(Platform(&block04, sf::Vector2f(100.0f, 320.0f), sf::Vector2f(2100.0f, -4360.0f), 0, showHitBox));
+
+
+	/////////////////////////////////////////////////// Platform 5  ////////////////////////////////////////////////////////
+	
+	Platform Partition5(&block, sf::Vector2f(40.0f, 1000.0f), sf::Vector2f(-750.0f, -5600.0f), 0, showHitBox); //ฉากกั้นของฉากที่ 5
+
+
 
 	//////////////////////////////////////////////////////////////////// WarpPoint สร้างประตูวาป ////////////////////////////////////////////////////////////
 	
@@ -346,6 +379,13 @@ int main()
 	warpPoint5.setPosition(sf::Vector2f(2950, -3000));
 	warpPoint5.setTexture(&doorwarp3);
 
+	sf::RectangleShape warpPoint6(sf::Vector2f(180, 400)); // // ประตูวาร์ป test 3 go 4
+	warpPoint6.setPosition(sf::Vector2f(200, -3200));
+	warpPoint6.setTexture(&doorwarp3);
+
+	sf::RectangleShape warpPoint7(sf::Vector2f(200, 400)); // ประตูวาร์ปจากฉากที่ 4 ไป 5
+	warpPoint7.setPosition(sf::Vector2f(2900, -4600));
+	warpPoint7.setTexture(&doorwarp4);
 
 	float deltaTime = 0.0f;
 	sf::Clock clock;
@@ -486,8 +526,8 @@ int main()
 
 			}
 
-			enemy1.Update(deltaTime);
-			enemy2.Update(deltaTime);
+			/*enemy1.Update(deltaTime);
+			enemy2.Update(deltaTime);*/
 			enemy3.Update(deltaTime);
 
 			int enemy1Hp = 10;
@@ -496,26 +536,6 @@ int main()
 
 			for (int i = 0; i < vbullet.size(); i++) //check bullet ชน enemy
 			{
-					if (enemy1.updateBulletCollision(&vbullet[i]))
-					{
-						enemy1Hp = 0;
-						vbullet.erase(vbullet.begin() + i);
-						if (enemy1Hp == 0)
-						{
-							j += 100;
-						}
-						break;
-					}
-					if (enemy2.updateBulletCollision(&vbullet[i]))
-					{
-						enemy2Hp = 0;
-						vbullet.erase(vbullet.begin() + i);
-						if (enemy2Hp == 0)
-						{
-							j += 100;
-						}
-						break;
-					}
 					if (enemy3.updateBulletCollision(&vbullet[i]))
 					{
 						enemy3Hp = 0;
@@ -533,6 +553,21 @@ int main()
 				score(j);
 			}
 			
+			/*for (size_t i = 0; i < enemys.size(); i++)
+			{
+				for (size_t j = 0; j < vbullet.size(); j++)
+				{
+					if (vbullet[j].getGlobalBounds().intersects(enemys[i].getGlobalBounds()))
+					{
+						enemys.erase(enemys.begin() + i);
+						vbullet.erase(vbullet.begin() + j);
+						
+						j += 100;
+					}
+					break;
+				}
+			}*/
+			
 		
 				
 
@@ -547,20 +582,20 @@ int main()
 					}
 				}
 				coin += 1;
-				if (platform.GetCollider().CheckCollision(enemy1.GetCollider(), direction, 1.0f)) //check platform collision enemy1
-					enemy1.OnCollision(direction);
-				if (platform.GetCollider().CheckCollision(enemy2.GetCollider(), direction, 1.0f)) //check platform collision enemy2
-					enemy2.OnCollision(direction);
+				//if (platform.GetCollider().CheckCollision(enemy1.GetCollider(), direction, 1.0f)) //check platform collision enemy1
+				//	enemy1.OnCollision(direction);
+				//if (platform.GetCollider().CheckCollision(enemy2.GetCollider(), direction, 1.0f)) //check platform collision enemy2
+				//	enemy2.OnCollision(direction);
 				if (platform.GetCollider().CheckCollision(enemy3.GetCollider(), direction, 1.0f)) //check platform collision enemy2
 					enemy3.OnCollision(direction);
 				
 			}
 
 			// check ชน enemy //
-			if (player.getPlayerGlobalbounds().intersects(enemy1.getEnemyGloabalbounds())) 
+			/*if (player.getPlayerGlobalbounds().intersects(enemy1.getEnemyGloabalbounds())) 
 			{
 				printf("HITTTTTTTT \n");
-			}
+			}*/
 
 			for (Platform& platform : platforms) { //check block เลื่อน
 				if (BlockSlide.GetCollider().CheckCollision(player.GetCollider(), direction, 0.0f)) {
@@ -571,20 +606,48 @@ int main()
 				}
 			}
 
-			// check block up down
-			if (Bmap1.body.getPosition().y == -150)
+			///////////////////////////////////////////////////////// check block ชน up and down //////////////////////////////////////////////////////////////////////
+			
+			// block updown ฉากที่ 2 //
+			if (Bmap2.body.getPosition().y == -1500)
 				blockupdown = 0;
-			else if (Bmap1.body.getPosition().y == 20)
+			else if (Bmap2.body.getPosition().y == -1100)
 				blockupdown = 1;
 
 			if (blockupdown == 0)
-				Bmap1.body.move(0.0f, 1.0f);
+				Bmap2.body.move(0.0f, 1.0f);
 			if (blockupdown == 1)
-				Bmap1.body.move(0.0f, -1.0f);
-			if (Bmap1.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) {
+				Bmap2.body.move(0.0f, -1.0f);
+			if (Bmap2.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) {
 				player.OnCollision(direction);
 			}
 
+			// block updown ฉากที่ 4 //
+			if (Bmap4.body.getPosition().y == -4700) // อันเเรก
+				blockupdown = 0;
+			else if (Bmap4.body.getPosition().y == -4300)
+				blockupdown = 1;
+
+			if (blockupdown == 0)
+				Bmap4.body.move(0.0f, 1.0f);
+			if (blockupdown == 1)
+				Bmap4.body.move(0.0f, -1.0f);
+			if (Bmap4.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) {
+				player.OnCollision(direction);
+			}
+
+			if (Bmap5.body.getPosition().y == -4700) //อันที่ 2
+				blockupdown = 0;
+			else if (Bmap5.body.getPosition().y == -4300)
+				blockupdown = 1;
+
+			if (blockupdown == 0)
+				Bmap5.body.move(0.0f, 1.0f);
+			if (blockupdown == 1)
+				Bmap5.body.move(0.0f, -1.0f);
+			if (Bmap5.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) {
+				player.OnCollision(direction);
+			}
 
 			/////////////////////////////////////////////////////////// ฉากกั้น ///////////////////////////////////////////////////////////////////////////
 			if (Partition.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) //ฉากกั้นที่ 1 ล่องหน
@@ -594,6 +657,8 @@ int main()
 			if (Partition3.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) //ฉากกั้นที่ 3 ล่องหน
 				player.OnCollision(direction);
 			if (Partition4.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) //ฉากกั้นที่ 4 ล่องหน
+				player.OnCollision(direction);
+			if (Partition5.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) //ฉากกั้นที่ 5 ล่องหน
 				player.OnCollision(direction);
 
 			//// Player view ////
@@ -610,12 +675,15 @@ int main()
 			window.draw(bg2);
 			window.draw(bg3);
 			window.draw(bg4);
+			window.draw(bg5);
 
 			BlockSlide.Draw(window); // block เลื่อน
 			BlockSlide2.Draw(window); // block slide2 เลื่อน
-			Bmap1.Draw(window);
-
-
+			Bmap2.Draw(window); // block เลื่อนขึ้นลง
+			Bmap4.Draw(window); // block2 เลื่อนขึ้นลง
+			Bmap4.Draw(window); // block3 เลื่อนขึ้นลง
+			Bmap5.Draw(window); // block3 เลื่อนขึ้นลง
+			
 			for (Platform& platform : platforms)
 			{
 				platform.Draw(window);
@@ -647,7 +715,7 @@ int main()
 				player.setPosition(sf::Vector2f(-500, -1500));
 			}
 			if (player.GetCollider().CheckCollision(Collider(warpPoint3))) { //ประตูวาร์ปฉากที่ 2 ไปฉากที่ 3
-				player.setPosition(sf::Vector2f(-700, -3000));
+				player.setPosition(sf::Vector2f(-700, -2650));
 			}
 			if (player.GetCollider().CheckCollision(Collider(warpPoint4))) { //test 2 go 3 black 
 				player.setPosition(sf::Vector2f(-300, -3500));
@@ -655,12 +723,15 @@ int main()
 			if (player.GetCollider().CheckCollision(Collider(warpPoint5))) { //ประตูวาร์ปฉากที่ 3 ไปฉากที่ 4
 				player.setPosition(sf::Vector2f(-700, -4200));
 			}
-			if (player.GetPosition().y > 200) { // water ในฉากที่ 1
-				player.setPosition(sf::Vector2f(-400, 0));
+			if (player.GetCollider().CheckCollision(Collider(warpPoint6))) { //ประตูวาร์ปฉากที่ 3 ไปฉากที่ 4
+				player.setPosition(sf::Vector2f(-700, -5150));
 			}
-			if ( player.GetPosition().x >2800 && player.GetPosition().y < 140) { // cactus ในฉากที่ 2
+			if (player.GetCollider().CheckCollision(Collider(warpPoint7))) { //ประตูวาร์ปฉากที่ 4 ไปฉากที่ 5
+				player.setPosition(sf::Vector2f(-700, -6100));
+			}
+			/*if ( player.GetPosition().x >2800 && player.GetPosition().y < 140) { 
 				player.setPosition(sf::Vector2f(-260, -1260));
-			}
+			}*/
 			if (player.GetPosition().y > -1380 && player.GetPosition().y < -1000 && player.GetPosition().x > 1195 && player.GetPosition().x < 1625 ) { // cactus ในฉากที่ 2
 				player.setPosition(sf::Vector2f(-260, -1260));
 			}
@@ -689,11 +760,13 @@ int main()
 			window.draw(door2); //หน้าต่างวาปฉากที่ 3
 			window.draw(warpPoint4); //test2
 			window.draw(warpPoint5);
+			window.draw(warpPoint6); //test3
+			window.draw(warpPoint7);
 			/// 
 			
 			
-			enemy1.Draw(window);
-			enemy2.Draw(window);
+			//enemy1.Draw(window);
+			//enemy2.Draw(window);
 			enemy3.Draw(window);
 			enemy4.Draw(window);
 

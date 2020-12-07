@@ -26,6 +26,8 @@ private:
 	sf::RectangleShape body;
 	float speed;
 	bool faceRight;
+
+	sf::FloatRect getBounds() const;
 	
 };
 

@@ -42,6 +42,11 @@ void bullet::del()
 	body.setPosition(NULL - 100, NULL - 100);
 }
 
+sf::FloatRect bullet::getBounds() const
+{
+	return this->body.getGlobalBounds();
+}
+
 void bullet::setPosition(sf::Vector2f position)
 {
 	body.setPosition(position);
@@ -49,5 +54,6 @@ void bullet::setPosition(sf::Vector2f position)
 
 void bullet::OnCollision(sf::Vector2f direction)
 {
+
 }
 
