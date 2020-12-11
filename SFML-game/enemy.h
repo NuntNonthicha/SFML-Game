@@ -7,7 +7,7 @@
 class enemy
 {
 public:
-	enemy(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float posx, float posy, float speed);
+	enemy(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float posx, float posy, float speed, int hp);
 	~enemy();
 
 	bool updateBulletCollision(bullet* bullet);
@@ -29,10 +29,12 @@ public:
 	}
 	
 	const sf::FloatRect getEnemyGloabalbounds() const;
+	sf::RectangleShape body;
+	int hp;
 
 private:
 	sf::Vector2f velocity;
-	sf::RectangleShape body;
+	
 	sf::RectangleShape enemyHitbox;
 	float speed;
 	bool faceRight;

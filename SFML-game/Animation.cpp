@@ -48,3 +48,22 @@ void Animation::Update(int row, float deltatime, bool faceRight)
 	}
 }
 
+void Animation::updateItemBlood(int row, float deltaTime)
+{
+	currentImage.y = row;
+	totalTime += deltaTime;
+
+	if (totalTime >= switchTime)
+	{
+		totalTime -= switchTime;
+		currentImage.x++;
+
+		if (currentImage.x >= imageCount.x)
+		{
+			currentImage.x = 0;
+		}
+
+	}
+	uvRect.left = currentImage.x * uvRect.width;
+	uvRect.top = currentImage.y * uvRect.height;
+}

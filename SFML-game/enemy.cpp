@@ -1,9 +1,10 @@
 #include "enemy.h"
 #include<iostream>
 
-enemy::enemy(sf::Texture* texture,sf::Vector2u imageCount,float switchTime, float posx, float posy , float speed):
+enemy::enemy(sf::Texture* texture,sf::Vector2u imageCount,float switchTime, float posx, float posy , float speed, int hp):
 animation(texture, imageCount, switchTime)
 {
+	this->hp = hp;
 	this->speed = speed;
 	this->faceRight = false;
 	body.setTexture(texture);

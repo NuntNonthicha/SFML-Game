@@ -21,9 +21,11 @@ public:
 
 	bool isShoot() { return shoot; }
 	bool faceRight;
+	sf::RectangleShape body;
+	int dmg;
 
 private:
-	sf::RectangleShape body;
+	
 	sf::RectangleShape hitBox;
 
 	sf::RectangleShape playerHitbox;

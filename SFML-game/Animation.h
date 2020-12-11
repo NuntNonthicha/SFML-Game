@@ -8,7 +8,7 @@ public:
 	~Animation();
 
 	void Update(int row, float deltaTime, bool faceRight);
-	
+	void updateItemBlood(int row, float deltaTime);
 
 public:
 	sf::IntRect uvRect;

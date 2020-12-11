@@ -18,12 +18,12 @@ public:
 	sf::Vector2f GetPosition() { return body.getPosition(); }
 	Collider GetCollider() { return Collider(body); }
 
-	
+	sf::RectangleShape body;
 
 	
 private:
 	sf::Vector2f velocity;
-	sf::RectangleShape body;
+	
 	float speed;
 	bool faceRight;
 

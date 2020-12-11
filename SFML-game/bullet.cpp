@@ -6,7 +6,7 @@ bullet::bullet(sf::Texture* texture, sf::Vector2f size, float switchTime , float
 {
 	this->speed = speed;
 	body.setTexture(texture);
-	body.setSize(sf::Vector2f(32, 32));
+	body.setSize(sf::Vector2f(22, 32));
 	body.setPosition(sf::Vector2f(posx,posy));
 	faceRight = directionFire; //ยิงกระสุนกลับด้าน
 }

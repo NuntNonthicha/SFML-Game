@@ -8,6 +8,7 @@ Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, 
 	this->jumpHeight = jumpHeight;
 	this->showhitbox = showhitbox;
 	row = 0;
+	dmg = 50;
 	faceRight = true;
 
 	canJump = true;
