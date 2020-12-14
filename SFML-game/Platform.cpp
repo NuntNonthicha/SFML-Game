@@ -23,7 +23,6 @@ Platform::~Platform()
 
 void Platform::Draw(sf::RenderWindow& window) 
 {
- 
     window.draw(body);
    /* if (showHitbox && blockType == 1) {
         window.draw(hitBox);
@@ -38,4 +37,9 @@ void Platform::setTexture(sf::Texture* texture)
 int Platform::getBlockType()
 {
     return this->blockType;
+}
+
+sf::Vector2f Platform::getPosition()
+{
+    return (this->body.getPosition());
 }

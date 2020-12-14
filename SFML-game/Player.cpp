@@ -74,13 +74,10 @@ void Player::Update(float deltaTime)
 	body.setTextureRect(animation.uvRect);
 	hitBox.move(velocity * deltaTime);
 	body.setPosition(hitBox.getPosition());
-	playerHitbox.setPosition(hitBox.getPosition());
 }
 
 void Player::Draw(sf::RenderWindow& window)
 {
-	window.draw(playerHitbox);
-
 	window.draw(body);
 
 	if (this->showhitbox) {
@@ -123,12 +120,12 @@ void Player::setPosition(sf::Vector2f position)
 
 const sf::FloatRect Player::getPlayerGlobalbounds() const
 {
-	return this->playerHitbox.getGlobalBounds();
+	return this->hitBox.getGlobalBounds();
 }
 
 const sf::Vector2f& Player::getPosition() const
 {
-	return this->body.getPosition();
+	return this->hitBox.getPosition();
 }
 
 

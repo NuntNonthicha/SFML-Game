@@ -11,11 +11,14 @@ public:
 	void Draw(sf::RenderWindow& window);
 	Collider GetCollider() { return Collider(body); }
 
+	sf::Vector2f  getPosition();
+
 	void setTexture(sf::Texture* texture);
 
 	int getBlockType();
 
 	sf::RectangleShape body;
+
 
 private:
 	

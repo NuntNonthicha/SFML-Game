@@ -10,6 +10,7 @@
 #include "enemy.h"
 #include "Coin.h"
 #include "Key.h"
+#include "Boss.h"
 #include<vector>
 #include"Menu.h"
 #include<algorithm>
@@ -20,6 +21,7 @@
 
 static const float VIEW_HEIGHT = 720.0f;
 int blockupdown;
+int BossBlood = 6;
 int enemyX[20] = {};
 int ranenemyX[20] = {};
 bool showHitBox = true; // show hitbox ให้มีหรือไม่มี
@@ -42,9 +44,9 @@ int main()
 	
 	bool checkState = false;
 	
-	sf::RenderWindow window(sf::VideoMode(1080, 720), "SFML Tutorial", sf::Style::Close | sf::Style::Resize);
+	sf::RenderWindow window(sf::VideoMode(1080, 720), "The Lost Princess | 63010484 | Programming Fundamental | KMITL", sf::Style::Close | sf::Style::Resize);
+	window.setFramerateLimit(60);
 
-	/*Menu menu(window.getSize().x, window.getSize().y);*/
 	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(VIEW_HEIGHT , VIEW_HEIGHT));
 	sf::Vector2f checkpoint;
 	
@@ -54,13 +56,16 @@ int main()
 	
 	sf::Texture enemyTexture; //enemy alien ในฉากที่ 3
 	enemyTexture.loadFromFile("frog.png");
-	sf::Texture enemyTexture2; //enemy pumpkin ในฉากที่ 5
-	enemyTexture2.loadFromFile("enemy.png");
+	//sf::Texture enemyTexture2; //enemy pumpkin ในฉากที่ 5
+	//enemyTexture2.loadFromFile("enemy.png");
 	sf::Texture enemyTexture3; //enemy bear ในฉากที่ 1
 	enemyTexture3.loadFromFile("bear.png");
 	sf::Texture enemyTexture4; //enemy dinosour ในฉากที่ 2 + 4
 	enemyTexture4.loadFromFile("dinosour.png");
 
+	sf::Texture BossTexture; //boss pumpkin
+	BossTexture.loadFromFile("boss.png");
+	
 	////////////////////////////////////////////////// Background////////////////////////////////////////////////////////////
 
 	sf::Texture backgroundmenu; // bg menu
@@ -78,6 +83,12 @@ int main()
 	sf::RectangleShape bghighscore(sf::Vector2f(1080, 720));
 	bghighscore.setTexture(&backgroundhighscore);
 
+	sf::Texture backgroundgameover; // bg gameover
+	backgroundgameover.loadFromFile("gameover.png");
+	sf::RectangleShape bggameover(sf::Vector2f(1080, 720));
+	bggameover.setTexture(&backgroundgameover);
+	bggameover.setPosition(sf::Vector2f(-205.0f, -200.0f));
+	bggameover.setScale(sf::Vector2f(0.7, 1));
 
 	sf::Texture background; // bg ฉากที่ 1 
 	background.loadFromFile("bg01.png");
@@ -184,14 +195,32 @@ int main()
 	sf::Texture buttonreturnmenu; //button return menu highscore to main menu
 	buttonreturnmenu.loadFromFile("returnmenu.png");
 	
-	sf::Music music1, mainMusic, map2Music, map5Music, mapmainMusic, map4Music;
-
-	music1.openFromFile("Sound/map1.mp3");
-	
-	music1.setVolume(100);
+	////////////////////////////////////////////////////////// Sound Effect ///////////////////////////////////
+	sf::Music music1;
+	music1.openFromFile("Sound/map1.wav");
+	music1.setVolume(80);
 	music1.setLoop(true);
 	
+	/// sound effect ///
+	sf::SoundBuffer jump, shoot, coineff, enemyhurt;
+	jump.loadFromFile("Sound/jump.wav");
+	shoot.loadFromFile("Sound/shoot.wav");
+	coineff.loadFromFile("Sound/coin.wav");
+	enemyhurt.loadFromFile("Sound/death.wav");
+
+	sf::Sound jumpSound, shootSound, coineffSound, enemyhurtSound;
+	jumpSound.setBuffer(jump);
+	jumpSound.setVolume(70.0f);
+	shootSound.setBuffer(shoot);
+	shootSound.setVolume(120.0f);
+	coineffSound.setBuffer(coineff);
+	coineffSound.setVolume(100.0f);
+	enemyhurtSound.setBuffer(enemyhurt);
+	enemyhurtSound.setVolume(100.0f);
+	
+
 	Player player(&playerTexture, sf::Vector2u(8, 3), 0.1f, 100, 100, showHitBox);
+	Boss boss(&BossTexture, sf::Vector2u(8, 3), 0.15f, 200.0f, sf::Vector2f(2000.0f, -5640.0f));
 
 	//////////////////////////////////////////////////////////////////////// Platform ////////////////////////////////////////////////////////////////////////
 	
@@ -206,25 +235,9 @@ int main()
 	keys.push_back(Key(&keyTexture, sf::Vector2u(6, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(0.0f, 0.0f)));
 	keys.push_back(Key(&keyTexture, sf::Vector2u(6, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(200.0f, 0.0f)));
 
+	
 	/////////////////////////////////////////////////// Platform 1  ////////////////////////////////////////////////////////
-	//for (int i = 0; i < 5; i++) อิหยังงงงงงงง??
-	//{
-	//	srand(time(NULL));
-	//	enemyX[i] = rand();
 
-	//	if (ranenemyX[i] >= 0 && ranenemyX[i] <= 1000)
-	//		enemyX[i] = ranenemyX[i];
-
-	//	coins.push_back(Coin(&coinTexture, sf::Vector2u(10, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(enemyX[i], 160.0f)));
-	//	coins.push_back(Coin(&coinTexture, sf::Vector2u(10, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(enemyX[i], 160.0f)));
-	//	coins.push_back(Coin(&coinTexture, sf::Vector2u(10, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(enemyX[i], 160.0f)));
-	//	coins.push_back(Coin(&coinTexture, sf::Vector2u(10, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(enemyX[i], 160.0f)));
-	//}
-	if (player.GetPosition().y <= 2360.0f && player.GetPosition().y > 900.0f)    //1
-	{
-		music1.play();
-		
-	}
 	Platform Partition(&block, sf::Vector2f(40.0f, 2143.0f), sf::Vector2f(-760.0f, 0.0f), 0, showHitBox); //ฉากกั้นของฉากที่ 1
 
 	platforms.push_back(Platform(&block, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(-180.0f, 30.0f), 0, showHitBox)); //block1
@@ -264,6 +277,7 @@ int main()
 	
 
 	platforms.push_back(Platform(&blockcoin, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(130.0f, 30.0f),1, showHitBox)); //blockcoin1 in block2ลอย บน
+
 	platforms.push_back(Platform(&blockcoin, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(250.0f, -150.0f),1, showHitBox)); //blockcoin2 in block3ลอย บน
 	platforms.push_back(Platform(&blockcoin, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(1800.0f, 20.0f),1, showHitBox)); //blockcoin2 in block4ลอย บน
 	platforms.push_back(Platform(&blockcoin, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(2250.0f, -280.0f), 1, showHitBox)); //heart
@@ -368,7 +382,7 @@ int main()
 	platforms.push_back(Platform(&ice, sf::Vector2f(130.0f, 300.0f), sf::Vector2f(1800.0f, -2650.0f), 0, showHitBox)); //ice block2
 	platforms.push_back(Platform(&ice, sf::Vector2f(150.0f, 200.0f), sf::Vector2f(2300.0f, -2650.0f), 0, showHitBox)); //ice block3
 
-	platforms.push_back(Platform(&heart, sf::Vector2f(100.0f, 200.0f), sf::Vector2f(650.0f, -2800.0f), 1, showHitBox));
+	platforms.push_back(Platform(&blockcoin, sf::Vector2f(100.0f, 200.0f), sf::Vector2f(650.0f, -2800.0f), 1, showHitBox));
 
 	//// Enemy ฉากที่ 3 /////
 	enemys.push_back(enemy(&enemyTexture, sf::Vector2u(8, 1), 0.1f, 1100, -2640, 100.0f, 150));
@@ -442,9 +456,6 @@ int main()
 	
 	Platform Partition5(&block, sf::Vector2f(40.0f, 1000.0f), sf::Vector2f(-750.0f, -5600.0f), 0, showHitBox); //ฉากกั้นของฉากที่ 5
 
-	//// Enemy ฉากที่ 5 /////
-	enemys.push_back(enemy(&enemyTexture, sf::Vector2u(10, 1), 0.1f, 700, -5640, 100.0f, 600));
-	
 	
 	coins.push_back(Coin(&coinTexture, sf::Vector2u(10, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(rand() % 100 + 0.0f, -5640.0f)));
 	coins.push_back(Coin(&coinTexture, sf::Vector2u(10, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(rand() % 100 + 300.0f, -5640.0f)));
@@ -535,10 +546,9 @@ int main()
 		if(x == 0)
 		{
 
-			
 			window.clear();
 			if (button1.getGlobalBounds().contains(sf::Vector2f(sf::Mouse::getPosition(window))))
-			{
+			{	
 				button1.setFillColor(sf::Color::Green);
 				if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 				{
@@ -575,11 +585,26 @@ int main()
 					x = 4;
 				}
 			}
+
+			sf::Text  nameText;
+			sf::Font font;
+			font.loadFromFile("Font/ROGFonts-Regular.otf"); 
+			sf::RectangleShape nameRec;
+			std::string nameString;
+			nameText.setFont(font);
+			nameText.setFillColor(sf::Color::White);
+			nameText.setCharacterSize(14);
+			nameText.setPosition(view.getCenter().x + 100, 680);
+			nameString = " Nonthicha  Sukcharoen ";
+			nameText.setString(nameString);
+
+			
 			window.draw(bgmenu);
 			window.draw(button1);
 			window.draw(button2);
 			window.draw(button3);
 			window.draw(button5);
+			window.draw(nameText);
 		}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////// หน้า How to play /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -622,16 +647,30 @@ int main()
 			window.close();
 		}
 
+		//////////////////////////////////////////////////////////////////////////////////////////////////// หน้า Game over /////////////////////////////////////////////////////////////////////////////////////////////////////
+		if (x == 5)
+		{
+			window.clear();
+			window.draw(bggameover);
+		}
+
 		//////////////////////////////////////////////////////////////////////////////////////////////////// หน้า Start เข้า Game /////////////////////////////////////////////////////////////////////////////////////////////////////////
 			
 		if (x == 3)
 		{
+			
 			printf("x = %.f  y = %.f\n", player.GetPosition().x, player.GetPosition().y);
 
 			player.Update(deltaTime);
 
+			sf::Vector2f direction; // direction player
 
-			sf::Vector2f direction;
+			sf::Vector2f directionM; // direction boss
+			if (BossBlood > 0)
+				boss.Update(deltaTime);
+
+			if (BossBlood <= 0)
+				boss.Update2(deltaTime);
 
 			/////////////////////////////////////////////////////// check bullet /////////////////////////////////////////
 
@@ -653,18 +692,17 @@ int main()
 			{
 				if (player.GetCollider().CheckCollision(enemys[i].GetCollider(), direction, 0.0f))
 				{
-					
-						//enemys.erase(enemys.begin() + i);
+						enemyhurtSound.play();
+						enemys.erase(enemys.begin() + i);
 						life--;
-						if (life <= 0)
-						{
-							printf("Dead!!");
-							x = 4;
-						}
-
+						
 				}
 			}
-			
+			if (life <= 0)
+			{
+				printf("Dead!!");
+				x = 5;
+			}
 
 			/// check กระสุน ยิงโดน enemy เเล้ว enemy ตาย + คะเเนนเพิ่มขึ้น ///
 
@@ -679,6 +717,7 @@ int main()
 						printf(" hit");
 						if (enemys[i].hp <= 0)
 						{
+							enemyhurtSound.play();
 							enemys.erase(enemys.begin() + i);
 							score += 100;
 						}
@@ -691,8 +730,9 @@ int main()
 			{
 				if (player.GetCollider().CheckCollision(coins[i].GetCollider(), direction, 0.0f))
 				{
-					score += 10;
+					coineffSound.play();
 					coins.erase(coins.begin() + i);
+					score += 10;
 				}
 					
 			}
@@ -704,28 +744,34 @@ int main()
 				if (player.GetCollider().CheckCollision(keys[i].GetCollider(), direction, 0.0f))
 				{
 					key++;
+					coineffSound.play();
 					keys.erase(keys.begin() + i);
 				}
-				if (key == 2) {  // goto map boss
-					player.body.setPosition(750.0f, -5600.0f);
-				}
+				
+			}
+			if (key == 2) {  // goto map boss
+					player.setPosition(sf::Vector2f(-260.0f, -5640.0f));
+					key = 0;
 			}
 
 			/////////////////////////////////////////////////////////check ชน //////////////////////////////////////////////////////////////////////
+
+			///////////////check ชน blockcoin ////////////////////////////////////
 			int coin = 0;
 			for (Platform& platform : platforms) { //check collision platform
 				if (platform.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) {
 					player.OnCollision(direction);
-					if (platform.getBlockType() == 1) { // 1 = ชน
+					if (platform.getBlockType() == 1 && platform.getPosition().y + 55 <= player.GetPosition().y) { // 1 = ชน
+						jumpSound.play();
 						printf("\n\coin");
+						sf::Vector2f platformPos = platform.getPosition();
 						platforms.erase(platforms.begin() + coin);
+						coins.push_back(Coin(&coinTexture, sf::Vector2u(10, 1), 0.1f, sf::Vector2f(40.0f, 40.0f),platformPos));
 					}
 				}
 				coin += 1;
 			}
-
 			
-
 			for (Platform& platform : platforms) { //check block เลื่อน
 				if (BlockSlide.GetCollider().CheckCollision(player.GetCollider(), direction, 0.0f)) {
 					player.OnCollision(direction);
@@ -793,19 +839,16 @@ int main()
 			/////////////////////////////////////////////////////////// Check ชน Key ///////////////////////////////////////////////////////////////////////////
 		
 
-			//if (player.body.getGlobalBounds().intersects(map3WARP5.body.getGlobalBounds()) && key == 4)   //map 3  : goto map boss
+			//if (player.body.getGlobalBounds().intersects(keys.body.getGlobalBounds()) && key == 2)   //map 3  : goto map boss
 			//	player.body.setPosition(-1380.0f, -14250.0f);
 		
 			
-
-		
 
 			//////////////////////////////////////////////////////////// Player view ///////////////////////////////////////////////////////////
 			if (player.GetPosition().x >= -418 && player.GetPosition().x <= 2800) //ล็อคฉากที่ 1 ไม่ให้เลื่อนเกิน ด้านซ้าย && ด้านขวา (ให้อยุ่กลางจอ) && player.GetPosition().x <= 824
 			{
 				view.setCenter(player.GetPosition().x, player.GetPosition().y); //ล็อคฉากไม่เคลื่อนขึ้นบน ,0
 			}
-
 
 			window.clear(sf::Color(100, 100, 100)); //130 100 60 brown
 			window.setView(view);
@@ -823,6 +866,7 @@ int main()
 			Bmap4.Draw(window); // block2 เลื่อนขึ้นลง
 			Bmap4.Draw(window); // block3 เลื่อนขึ้นลง
 			Bmap5.Draw(window); // block3 เลื่อนขึ้นลง
+			boss.Draw(window); 
 			
 			for (Platform& platform : platforms)
 			{
@@ -840,6 +884,47 @@ int main()
 				key.Draw(window);
 				key.Update(deltaTime);
 			}
+
+
+			for (Platform& platform : platforms) // chack boss ชน platform	
+				if (platform.GetCollider().CheckCollision(boss.GetCollider(), directionM, 1.0f))
+					boss.OnCollision(directionM);
+				
+				if (BossBlood > 0)
+				{
+					if (boss.body.getGlobalBounds().intersects(player.body.getGlobalBounds()))
+					{
+						player.body.setPosition(boss.body.getPosition().x - 100.0f, boss.body.getPosition().y);
+
+						if (life > 0)
+						enemyhurtSound.play();
+						life --;
+					}
+				}
+
+
+				for (size_t j = 0; j < vbullet.size(); j++)
+				{
+					if (vbullet[j].body.getGlobalBounds().intersects(boss.body.getGlobalBounds()))
+					{
+						shootSound.play();
+						BossBlood--;
+						vbullet.erase(vbullet.begin() + j);
+						score += 1000;
+					}
+
+				}
+
+				if (BossBlood <= 0)
+				{
+					if (BossBlood == 0)
+					{
+						score += 5000;
+						BossBlood--;
+						
+					}
+				}
+
 
 			for (enemy& enemy : enemys)
 			{
@@ -884,20 +969,20 @@ int main()
 			}
 			if (player.GetPosition().y > 250) { // water ในฉากที่ 1
 				player.setPosition(sf::Vector2f(-340, -160));
+				enemyhurtSound.play();
 				life--;
 			}
 			if (player.GetPosition().y > -1380 && player.GetPosition().y < -1000 && player.GetPosition().x > 1195 && player.GetPosition().x < 1625 ) { // cactus ในฉากที่ 2
 				player.setPosition(sf::Vector2f(-260, -1260));
+				enemyhurtSound.play();
 				life--;
 			}
 			
 			/////////////////////////////////////  ใส่ Score /////////////////////////////////////////////////////
 			sf::Text scoreText;
 			sf::Font font;
-			if (!font.loadFromFile("Font/ROGFonts-Regular.otf"))
-			{
-				std::cout << "ERROR TO LOAD FONT" << "\n";
-			}
+			font.loadFromFile("Font/ROGFonts-Regular.otf");
+			
 			scoreText.setFont(font);
 			scoreText.setCharacterSize(25);
 			scoreText.setFillColor(sf::Color::Red);
@@ -957,6 +1042,11 @@ int main()
 			}
 
 
+			if (player.GetPosition().y < 200.0f )
+			{
+				music1.play();
+
+			}
 		}
 		window.display();
 		
