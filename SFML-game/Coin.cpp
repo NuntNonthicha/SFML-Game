@@ -35,7 +35,3 @@ void Coin::setTexture(sf::Texture* texture)
 	body.setTexture(texture);
 }
 
-//void coin::OnCollision(sf::Vector2f direction)
-//{
-//
-//}

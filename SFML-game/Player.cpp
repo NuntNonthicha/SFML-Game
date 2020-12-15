@@ -19,7 +19,7 @@ Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, 
 	body.setPosition(-400.0f, 50.0f); 
 	hitBox.setPosition(-400.0f, 50.0f);
 	hitBox.setFillColor(sf::Color::Transparent);
-	hitBox.setOutlineColor(sf::Color::Green);
+	hitBox.setOutlineColor(sf::Color::Transparent);
 	hitBox.setOutlineThickness(3.f);
 	body.setTexture(texture);
 	spacebarClock.restart();

@@ -23,6 +23,8 @@ public:
 	bool faceRight;
 	sf::RectangleShape body;
 	int dmg;
+	float speed;
+	float maxspeed;
 
 private:
 	
@@ -32,7 +34,7 @@ private:
 
 	Animation animation;
 	unsigned int row; 
-	float speed;
+	
 
 
 	const sf::Vector2f& getPosition() const;

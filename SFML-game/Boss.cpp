@@ -7,7 +7,7 @@ Boss::Boss(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, floa
 	row = 0;
 	faceRight = true;
 
-	body.setSize(sf::Vector2f(400.0f, 450.0f));
+	body.setSize(sf::Vector2f(200.0f, 250.0f));
 	body.setOrigin(body.getSize() / 2.0f);
 	body.setPosition(position);
 	body.setTexture(texture);
@@ -116,7 +116,7 @@ void Boss::BottomPlayer(sf::Vector2f directionR)
 	{
 		//Collision on the top.
 		velocity.y = 0.0f;
-		body.move(1000, 1000);
+		body.move(10000, 10000);
 
 	}
 }

@@ -1,36 +1,30 @@
 #include "Item.h"
-
-Item::Item(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float posx, float posy) :
+Item::Item(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2f position, unsigned int row) :
 	animation(texture, imageCount, switchTime)
 {
-	row = 0;
-	body.setTexture(texture);
-	body.setSize(sf::Vector2f(50, 90));
-	body.setOrigin(body.getSize() / 2.0f);
-	body.setPosition(sf::Vector2f(posx, posy));
+	this->row = row;
+	item.setSize(sf::Vector2f(30, 40));
+	item.setOrigin(item.getSize() / 2.0f);
+	item.setPosition(position);
+	item.setTexture(texture);
 }
 
 Item::~Item()
 {
 }
 
-
-void Item::Update(float deltaTime , Player player)
+void Item::Update(float deltatime)
 {
-	animation.Update(row, deltaTime,0);
-	body.setTextureRect(animation.uvRect);
-
-	//if (player.GetCollider().CheckCollision(this->GetCollider()))
-	//{
-	//	body.setPosition(-3000.0f, 350.0f); //ชนเเล้วให้ไปอยุ่หลังฉาก
-	//}
+	velocity.x *= 0.0f;
+	animation.Update(row, deltatime, faceRight);
+	item.setTextureRect(animation.uvRect);
+	item.move(velocity * deltatime);
 }
 
 void Item::Draw(sf::RenderWindow& window)
 {
-	window.draw(body);
+	window.draw(item);
 }
-
 
 
 
