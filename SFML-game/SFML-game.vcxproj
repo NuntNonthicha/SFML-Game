@@ -143,13 +143,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
-    <ClCompile Include="Blood.cpp" />
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="Coin.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="enemy.cpp" />
-    <ClCompile Include="GameOverState.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Key.cpp" />
     <ClCompile Include="main.cpp" />
@@ -159,17 +157,14 @@
     <ClCompile Include="Princess.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Source1.cpp" />
-    <ClCompile Include="victory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
-    <ClInclude Include="Blood.h" />
     <ClInclude Include="Boss.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="Coin.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="enemy.h" />
-    <ClInclude Include="GameOverState.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Key.h" />
     <ClInclude Include="main.h" />
@@ -178,7 +173,6 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Princess.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="victory.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SFML-game.rc" />

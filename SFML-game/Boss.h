@@ -16,6 +16,7 @@ public:
 	void OnCollision(sf::Vector2f directionM);
 	void BottomPlayer(sf::Vector2f directionM);
 	void CalPlayer(sf::Vector2f directionM);
+	void setPosition(sf::Vector2f position);
 
 
 	sf::Vector2f GetPosition() { return body.getPosition(); }

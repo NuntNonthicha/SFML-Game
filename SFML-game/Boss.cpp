@@ -3,7 +3,7 @@
 Boss::Boss(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, sf::Vector2f position) :
 	animation(texture, imageCount, switchTime)
 {
-	this->speed = speed;
+	this->speed = 1.2 * speed;
 	row = 0;
 	faceRight = true;
 

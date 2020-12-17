@@ -13,8 +13,6 @@
 #include "Princess.h"
 #include "Item.h"
 #include"Menu.h"
-#include "GameOverState.h"
-#include "Victory.h"
 #include<iostream>
 #include<algorithm>
 #include <fstream>
@@ -37,11 +35,11 @@ void ResizeView(const sf::RenderWindow& window, sf::View& view)
 	view.setSize(VIEW_HEIGHT * aspectRatio, VIEW_HEIGHT);
 }
 
-//int rand_x = (rand() % int(window.getSize().x))
+
 int main()
 {
 	float debounce = 0;
-	sf::Clock clock2;
+	
 	srand(time(NULL));
 	int items = 0;
 	int rowItem = 0;
@@ -51,6 +49,7 @@ int main()
 	bool row1 = false;
 	bool row2 = false;
 
+	sf::Clock clock2; 
 	sf::Clock Clockrow0;
 	sf::Clock Clockrow1;
 	sf::Clock Clockrow2;
@@ -58,178 +57,73 @@ int main()
 	float row1Clock = 0.0f;
 	float row2Clock = 0.0f;
 
-	std::memset(checkchon, true, sizeof checkchon);
-
 	int score = 0;
 	unsigned int life = 3;
 	int key = 0;
-	int keyx[20] = { 0 }, keyy[20] = { 0 };
 	int x = 0; //x คือ เลขตัวเข้าเมนู
 	
-	bool checkState = false;
 	
+	bool checkState = false;
+	std::memset(checkchon, true, sizeof checkchon);
+
 	sf::RenderWindow window(sf::VideoMode(1080, 720), "The Lost Princess | 63010484 | Programming Fundamental | KMITL", sf::Style::Close | sf::Style::Resize);
 	window.setFramerateLimit(60);
 
 	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(VIEW_HEIGHT , VIEW_HEIGHT));
 	sf::Vector2f checkpoint;
 	
-	sf::Texture playerTexture; //knight player
-	playerTexture.loadFromFile("robot.png"); 
-
-	sf::Texture enemyTexture; //enemy alien ในฉากที่ 3
-	enemyTexture.loadFromFile("frog.png");
-	sf::Texture enemyTexture2; //enemy pumpkin ในฉากที่ 5
-	enemyTexture2.loadFromFile("enemy.png");
-	sf::Texture enemyTexture3; //enemy bear ในฉากที่ 1
-	enemyTexture3.loadFromFile("bear.png");
-	sf::Texture enemyTexture4; //enemy dinosour ในฉากที่ 2 + 4
-	enemyTexture4.loadFromFile("dinosour.png");
-	sf::Texture BossTexture; //boss dinosour
-	BossTexture.loadFromFile("boss.png");
-	sf::Texture PrincessTexture; //Princess
-	PrincessTexture.loadFromFile("Princess.png");
-
-
 	
 	////////////////////////////////////////////////// Background////////////////////////////////////////////////////////////
 
+	// Menu
 	sf::Texture backgroundmenu; // bg menu
-	backgroundmenu.loadFromFile("bgmenu2.png");
+	backgroundmenu.loadFromFile("Pic/bgmenu2.png");
 	sf::RectangleShape bgmenu(sf::Vector2f(1080, 720));
 	bgmenu.setTexture(&backgroundmenu);
-
 	sf::Texture backgroundhowtoplay; // bg menu how to play
-	backgroundhowtoplay.loadFromFile("menuhowtoplay.png");
+	backgroundhowtoplay.loadFromFile("Pic/menuhowtoplay.png");
 	sf::RectangleShape bghowtoplay(sf::Vector2f(1080, 720));
 	bghowtoplay.setTexture(&backgroundhowtoplay);
-
 	sf::Texture backgroundhighscore; // bg menu high score
-	backgroundhighscore.loadFromFile("menuhighscore.png");
+	backgroundhighscore.loadFromFile("Pic/menuhighscore.png");
 	sf::RectangleShape bghighscore(sf::Vector2f(1080, 720));
 	bghighscore.setTexture(&backgroundhighscore);
 
-	sf::Texture backgroundname; // bg name
-	backgroundname.loadFromFile("bgname.png");
-	sf::RectangleShape bgname(sf::Vector2f(1080, 720));
-	bgname.setTexture(&backgroundname);
-
+		/// Menu button
+	sf::Texture buttonplay; //button menu play
+	buttonplay.loadFromFile("Pic/play.png");
+	sf::Texture buttonhowtoplay; //button menu howtoplay
+	buttonhowtoplay.loadFromFile("Pic/howtoplay.png");
+	sf::Texture buttonhighscore; //button menu highscore
+	buttonhighscore.loadFromFile("Pic/highscore.png");
+	sf::Texture buttonexit; //button exit
+	buttonexit.loadFromFile("Pic/exit.png");
+	sf::Texture buttonreturnmenu; //button return menu highscore to main menu
+	buttonreturnmenu.loadFromFile("Pic/returnmenu.png");
 	sf::Texture backgroundvictory; // bg victory
-	backgroundvictory.loadFromFile("victory.png");
+	backgroundvictory.loadFromFile("Pic/victory.png");
 	sf::RectangleShape bgvictory(sf::Vector2f(1080, 720));
 	bgvictory.setTexture(&backgroundvictory);
 	bgvictory.setScale(sf::Vector2f(0.0f, 0.0f));
 	bgvictory.setPosition(sf::Vector2f(2255.0f, -5640.0f));
 
-	sf::Texture background; // bg ฉากที่ 1 
-	background.loadFromFile("bg01.png");
-	sf::RectangleShape bg(sf::Vector2f(4000, 1000));
-	bg.setPosition(sf::Vector2f(-800, -800)); //-500 -360
-	bg.setTexture(&background);
-
-	sf::Texture floorwater; // ใส่พื้นน้ำ
-	floorwater.loadFromFile("water.png");
-	sf::RectangleShape bgwater(sf::Vector2f(2500, 3800));
-	bgwater.setPosition(sf::Vector2f(2500, 200));
-	bgwater.setTexture(&floorwater);
-
-	sf::Texture background2; // bg ฉากที่ 2
-	background2.loadFromFile("bg02.png");
-	sf::RectangleShape bg2(sf::Vector2f(4000, 1000));
-	bg2.setPosition(sf::Vector2f(-800, -2200)); 
-	bg2.setTexture(&background2);
-
-	sf::Texture background3; // bg ฉากที่ 3
-	background3.loadFromFile("bg03.png");
-	sf::RectangleShape bg3(sf::Vector2f(4000, 1000));
-	bg3.setPosition(sf::Vector2f(-800, -3600));
-	bg3.setTexture(&background3);
-
-	sf::Texture background4; // bg ฉากที่ 4
-	background4.loadFromFile("bg04.png");
-	sf::RectangleShape bg4(sf::Vector2f(4000, 1000));
-	bg4.setPosition(sf::Vector2f(-800, -5150));
-	bg4.setTexture(&background4);
-
-	sf::Texture background5; // bg ฉากที่ 5
-	background5.loadFromFile("bg5.png");
-	sf::RectangleShape bg5(sf::Vector2f(4000, 1000));
-	bg5.setPosition(sf::Vector2f(-800, -6600));
-	bg5.setTexture(&background5);
-
-	/// bg1+2 floor+block
-	sf::Texture floor;
-	floor.loadFromFile("floor01.png");
-	sf::Texture floor2;
-	floor2.loadFromFile("floor02.png");
-	sf::Texture floor3;
-	floor3.loadFromFile("floor03.png");
-	sf::Texture floor4;
-	floor4.loadFromFile("floor04.png");
-	sf::Texture floor5;
-	floor5.loadFromFile("floor05.png");
-	sf::Texture block;
-	block.loadFromFile("block.png");
-	sf::Texture block01;
-	block01.loadFromFile("block01.png");
-	sf::Texture block02;
-	block02.loadFromFile("block02.png");
-	sf::Texture block03;
-	block03.loadFromFile("block03.png");
-	sf::Texture block04;
-	block04.loadFromFile("block04.png");
-	sf::Texture blockcoin;
-	blockcoin.loadFromFile("blockcoin.png");
-	sf::Texture brick; //อิฐขั้นบันได
-	brick.loadFromFile("brick.png");
-	sf::Texture channel; //ท่อเขียว
-	channel.loadFromFile("channel.png");
-	sf::Texture channel02; //ท่อเหลือง
-	channel02.loadFromFile("channel02.png");
-	sf::Texture windowwarp; //หน้าต่างวาร์ป
-	windowwarp.loadFromFile("window.png");
-	sf::Texture heart; //หัวใจ
-	heart.loadFromFile("heart.png");
-	sf::Texture doorwarp; //ประตูวาร์ป
-	doorwarp.loadFromFile("door.png");
-	sf::Texture doorwarp2; //ประตูวาร์ป2
-	doorwarp2.loadFromFile("door2.png");
-	sf::Texture doorwarp3; //ประตูวาร์ป3
-	doorwarp3.loadFromFile("door3.png");
-	sf::Texture doorwarp4; //ประตูวาร์ป4
-	doorwarp4.loadFromFile("door4.png");
-	sf::Texture cactus; //กระบองเพชร
-	cactus.loadFromFile("cactus.png");
-	sf::Texture iceblock; //ice block เลื่อน
-	iceblock.loadFromFile("iceblock.png");
-	sf::Texture ice; //ice block
-	ice.loadFromFile("ice.png");
-	sf::Texture stalagmite; //ice block
-	stalagmite.loadFromFile("stalagmite.png");
-	sf::Texture ball; //กระสุน
-	ball.loadFromFile("ball.png");
-	sf::Texture coinTexture; //coin
-	coinTexture.loadFromFile("coin.png");
-	sf::Texture keyTexture; //key 
-	keyTexture.loadFromFile("key.png");
-	sf::Texture itemTexture; //item
-	itemTexture.loadFromFile("power.png");
-	sf::Texture blockwhatTexture; //blockwhat
-	blockwhatTexture.loadFromFile("blockwhat.png");
-
 	//Input your name
+	sf::Texture backgroundname; // bg name
+	backgroundname.loadFromFile("Pic/bgname.png");
+	sf::RectangleShape bgname(sf::Vector2f(1080, 720));
+	bgname.setTexture(&backgroundname);
 	sf::Text name;
 	sf::Font font;
 	font.loadFromFile("Font/ROGFonts-Regular.otf");
 	name.setFont(font);
 	name.setFillColor(sf::Color::Red);
 	name.setCharacterSize(30);
-	name.setPosition(420, 360);
+	name.setPosition(415, 320);
 	sf::String nameplayer;
 
 	//gameover
 	Texture gameoverTexture;
-	gameoverTexture.loadFromFile("gameover.png");
+	gameoverTexture.loadFromFile("Pic/gameover.png");
 	RectangleShape gameo;
 	gameo.setTexture(&gameoverTexture);
 	gameo.setSize(Vector2f(window.getSize()));
@@ -241,10 +135,10 @@ int main()
 	hname.setFont(font);
 	hname.setCharacterSize(35);
 	hname.setFillColor(Color::Black);
-	
+
 	//victory
 	Texture victoryTexture;
-	victoryTexture.loadFromFile("victory.png");
+	victoryTexture.loadFromFile("Pic/victory.png");
 	RectangleShape win;
 	win.setTexture(&victoryTexture);
 	win.setSize(Vector2f(window.getSize()));
@@ -257,18 +151,113 @@ int main()
 	hname2.setCharacterSize(35);
 	hname2.setFillColor(Color::Black);
 
+	// Player+Enemy
+	sf::Texture playerTexture; //knight player
+	playerTexture.loadFromFile("Pic/robot.png");
+	sf::Texture enemyTexture; //enemy alien ในฉากที่ 3
+	enemyTexture.loadFromFile("Pic/frog.png");
+	sf::Texture enemyTexture2; //enemy pumpkin ในฉากที่ 5
+	enemyTexture2.loadFromFile("Pic/enemy.png");
+	sf::Texture enemyTexture3; //enemy bear ในฉากที่ 1
+	enemyTexture3.loadFromFile("Pic/bear.png");
+	sf::Texture enemyTexture4; //enemy dinosour ในฉากที่ 2 + 4
+	enemyTexture4.loadFromFile("Pic/dinosour.png");
+	sf::Texture BossTexture; //boss dinosour
+	BossTexture.loadFromFile("Pic/boss.png");
+	sf::Texture PrincessTexture; //Princess
+	PrincessTexture.loadFromFile("Pic/Princess.png");
 
-	/// Menu button
-	sf::Texture buttonplay; //button menu play
-	buttonplay.loadFromFile("play.png");
-	sf::Texture buttonhowtoplay; //button menu howtoplay
-	buttonhowtoplay.loadFromFile("howtoplay.png");
-	sf::Texture buttonhighscore; //button menu highscore
-	buttonhighscore.loadFromFile("highscore.png");
-	sf::Texture buttonexit; //button exit
-	buttonexit.loadFromFile("exit.png");
-	sf::Texture buttonreturnmenu; //button return menu highscore to main menu
-	buttonreturnmenu.loadFromFile("returnmenu.png");
+	sf::Texture background; // bg ฉากที่ 1 
+	background.loadFromFile("Pic/bg01.png");
+	sf::RectangleShape bg(sf::Vector2f(4000, 1000));
+	bg.setPosition(sf::Vector2f(-800, -800)); //-500 -360
+	bg.setTexture(&background);
+
+	sf::Texture floorwater; // ใส่พื้นน้ำ
+	floorwater.loadFromFile("Pic/water.png");
+	sf::RectangleShape bgwater(sf::Vector2f(2500, 3800));
+	bgwater.setPosition(sf::Vector2f(2500, 200));
+	bgwater.setTexture(&floorwater);
+	sf::Texture background2; // bg ฉากที่ 2
+	background2.loadFromFile("Pic/bg02.png");
+	sf::RectangleShape bg2(sf::Vector2f(4000, 1000));
+	bg2.setPosition(sf::Vector2f(-800, -2200)); 
+	bg2.setTexture(&background2);
+	sf::Texture background3; // bg ฉากที่ 3
+	background3.loadFromFile("Pic/bg03.png");
+	sf::RectangleShape bg3(sf::Vector2f(4000, 1000));
+	bg3.setPosition(sf::Vector2f(-800, -3600));
+	bg3.setTexture(&background3);
+	sf::Texture background4; // bg ฉากที่ 4
+	background4.loadFromFile("Pic/bg04.png");
+	sf::RectangleShape bg4(sf::Vector2f(4000, 1000));
+	bg4.setPosition(sf::Vector2f(-800, -5150));
+	bg4.setTexture(&background4);
+	sf::Texture background5; // bg ฉากที่ 5
+	background5.loadFromFile("Pic/bg5.png");
+	sf::RectangleShape bg5(sf::Vector2f(4000, 1000));
+	bg5.setPosition(sf::Vector2f(-800, -6600));
+	bg5.setTexture(&background5);
+
+	/// bg1+2 floor+block
+	sf::Texture floor;
+	floor.loadFromFile("Pic/floor01.png");
+	sf::Texture floor2;
+	floor2.loadFromFile("Pic/floor02.png");
+	sf::Texture floor3;
+	floor3.loadFromFile("Pic/floor03.png");
+	sf::Texture floor4;
+	floor4.loadFromFile("Pic/floor04.png");
+	sf::Texture floor5;
+	floor5.loadFromFile("Pic/floor05.png");
+	sf::Texture block;
+	block.loadFromFile("Pic/block.png");
+	sf::Texture block01;
+	block01.loadFromFile("Pic/block01.png");
+	sf::Texture block02;
+	block02.loadFromFile("Pic/block02.png");
+	sf::Texture block03;
+	block03.loadFromFile("Pic/block03.png");
+	sf::Texture block04;
+	block04.loadFromFile("Pic/block04.png");
+	sf::Texture blockcoin;
+	blockcoin.loadFromFile("Pic/blockcoin.png");
+	sf::Texture brick; //อิฐขั้นบันได
+	brick.loadFromFile("Pic/brick.png");
+	sf::Texture channel; //ท่อเขียว
+	channel.loadFromFile("Pic/channel.png");
+	sf::Texture channel02; //ท่อเหลือง
+	channel02.loadFromFile("Pic/channel02.png");
+	sf::Texture windowwarp; //หน้าต่างวาร์ป
+	windowwarp.loadFromFile("Pic/window.png");
+	sf::Texture heart; //หัวใจ
+	heart.loadFromFile("Pic/heart.png");
+	sf::Texture doorwarp; //ประตูวาร์ป
+	doorwarp.loadFromFile("Pic/door.png");
+	sf::Texture doorwarp2; //ประตูวาร์ป2
+	doorwarp2.loadFromFile("Pic/door2.png");
+	sf::Texture doorwarp3; //ประตูวาร์ป3
+	doorwarp3.loadFromFile("Pic/door3.png");
+	sf::Texture doorwarp4; //ประตูวาร์ป4
+	doorwarp4.loadFromFile("Pic/door4.png");
+	sf::Texture cactus; //กระบองเพชร
+	cactus.loadFromFile("Pic/cactus.png");
+	sf::Texture iceblock; //ice block เลื่อน
+	iceblock.loadFromFile("Pic/iceblock.png");
+	sf::Texture ice; //ice block
+	ice.loadFromFile("Pic/ice.png");
+	sf::Texture stalagmite; //stalagmite block
+	stalagmite.loadFromFile("Pic/stalagmite.png");
+	sf::Texture ball; //กระสุน
+	ball.loadFromFile("Pic/ball.png");
+	sf::Texture coinTexture; //coin
+	coinTexture.loadFromFile("Pic/coin.png");
+	sf::Texture keyTexture; //key 
+	keyTexture.loadFromFile("Pic/key.png");
+	sf::Texture itemTexture; //item
+	itemTexture.loadFromFile("Pic/power.png");
+	sf::Texture blockwhatTexture; //blockwhat
+	blockwhatTexture.loadFromFile("Pic/blockwhat.png");
 	
 	////////////////////////////////////////////////////////// Sound Effect ///////////////////////////////////
 	sf::Music music1;
@@ -302,12 +291,11 @@ int main()
 	gameoverSound.setBuffer(gameover);
 	gameoverSound.setVolume(120.0f);
 	
-
+	//////////////////////////////////////////////////////////////////////// Platform ////////////////////////////////////////////////////////////////////////
+	
 	Player player(&playerTexture, sf::Vector2u(8, 3), 0.1f, 100, 100, showHitBox);
 	Boss boss(&BossTexture, sf::Vector2u(8, 3), 0.15f, 200.0f, sf::Vector2f(2200.0f, -5640.0f));
 
-	//////////////////////////////////////////////////////////////////////// Platform ////////////////////////////////////////////////////////////////////////
-	
 	/// vector //
 	std::vector<Platform> platforms;
 	std::vector<Platform> Blockwhat;
@@ -381,7 +369,7 @@ int main()
 	coins.push_back(Coin(&coinTexture, sf::Vector2u(10, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(2450.0f, -260.0f)));
 
 	//// Key ฉากที่ 1 /////
-	keys.push_back(Key(&keyTexture, sf::Vector2u(6, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(0.0f, 0.0f)));  ///2670 -230
+	keys.push_back(Key(&keyTexture, sf::Vector2u(6, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(2670.0f, -230.0f)));  ///2670 -230
 
 	//// Blockwhat ฉากที่ 1 /////
 	Blockwhat.push_back(Platform(&blockwhatTexture, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(0.0f, -20.0f), 0, showHitBox));
@@ -400,7 +388,6 @@ int main()
 	/////////////////////////////////////////////////// Platform 2  ///////////////////////////////////////////////////////////////////////////////
 
 	Platform Partition2(&block, sf::Vector2f(40.0f, 200.0f), sf::Vector2f(-760.0f, -1350.0f), 0, showHitBox); //ฉากกั้นของฉากที่ 2 
-
 	Platform Bmap2(&block02, sf::Vector2f(100.0f, 60.0f), sf::Vector2f(2200.0f, -1500.0f), 0, showHitBox); // block เลื่อนขึ้นเเละลง
 
 	for (float i = 0; i < 5; i++) //loop block 
@@ -514,7 +501,6 @@ int main()
 	/////////////////////////////////////////////////// Platform 4  ////////////////////////////////////////////////////////
 
 	Platform Partition4(&block01, sf::Vector2f(40.0f, 500.0f), sf::Vector2f(-750.0f, -4500.0f), 0, showHitBox); //ฉากกั้นของฉากที่ 4
-
 	Platform Bmap4(&floor2, sf::Vector2f(100.0f, 60.0f), sf::Vector2f(1050.0f , -4300.0f), 0, showHitBox); // block เลื่อนขึ้นเเละลง
 	Platform Bmap5(&floor2, sf::Vector2f(100.0f, 60.0f), sf::Vector2f(1650.0f , -4300.0f), 0, showHitBox); // block เลื่อนขึ้นเเละลง
 	
@@ -568,8 +554,9 @@ int main()
 	keys.push_back(Key(&keyTexture, sf::Vector2u(6, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(200.0f, -4240.0f)));
 
 	//// Blockwhat ฉากที่ 4 /////
-	Blockwhat.push_back(Platform(&blockwhatTexture, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(850.0f, -4660.0f), 0, showHitBox));
-	chonBlockwhat.push_back(Platform(&itemTexture, sf::Vector2f(30.0f, 20.0f), sf::Vector2f(850.0f, -4645.0f), 0, showHitBox));
+	Blockwhat.push_back(Platform(&blockwhatTexture, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(850.0f, -4600.0f), 0, showHitBox));
+	chonBlockwhat.push_back(Platform(&itemTexture, sf::Vector2f(30.0f, 20.0f), sf::Vector2f(850.0f, -4585.0f), 0, showHitBox));
+
 
 	/////////////////////////////////////////////////// Platform 5  ////////////////////////////////////////////////////////
 	
@@ -582,12 +569,16 @@ int main()
 	coins.push_back(Coin(&coinTexture, sf::Vector2u(10, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(rand() % 100 + 0.0f, -5640.0f)));
 	coins.push_back(Coin(&coinTexture, sf::Vector2u(10, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(rand() % 100 + 300.0f, -5640.0f)));
 	coins.push_back(Coin(&coinTexture, sf::Vector2u(10, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(rand() % 100 + 500.0f, -5640.0f)));
+	coins.push_back(Coin(&coinTexture, sf::Vector2u(10, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(rand() % 100 + 1000.0f, -5640.0f)));
+	coins.push_back(Coin(&coinTexture, sf::Vector2u(10, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(rand() % 100 + 1500.0f, -5640.0f)));
+	coins.push_back(Coin(&coinTexture, sf::Vector2u(10, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(rand() % 100 + 1800.0f, -5640.0f)));
 
 	/// Princess ในฉากที่ 5 ///
 	myprincess.push_back(Princess(&PrincessTexture, sf::Vector2u(4, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(2700.0f, -5640.0f)));
 
 	//// Key ฉากที่ 5 /////
 	keys.push_back(Key(&keyTexture, sf::Vector2u(6, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), sf::Vector2f(1750.0f, -5640.0f)));
+
 
 
 	//////////////////////////////////////////////////////////////////// WarpPoint สร้างประตูวาป ////////////////////////////////////////////////////////////
@@ -604,37 +595,39 @@ int main()
 	warpPoint.setPosition(sf::Vector2f(2900, -100));
 	warpPoint.setTexture(&doorwarp);
 	
-	sf::RectangleShape warpPoint2(sf::Vector2f(60, 50)); // ประตูวาร์ป test 1 go 2
-	warpPoint2.setPosition(sf::Vector2f(-600, 100));
-	warpPoint2.setFillColor(sf::Color::Red);
+	//sf::RectangleShape warpPoint2(sf::Vector2f(60, 50)); // ประตูวาร์ป test 1 go 2
+	//warpPoint2.setPosition(sf::Vector2f(-600, 100));
+	//warpPoint2.setFillColor(sf::Color::Red);
 	
 	sf::RectangleShape warpPoint3(sf::Vector2f(150, 300)); // ประตูวาร์ปจากฉากที่ 2 ไป 3
 	warpPoint3.setPosition(sf::Vector2f(2950, -1500));
 	warpPoint3.setTexture(&doorwarp2);
 
-	sf::RectangleShape warpPoint4(sf::Vector2f(50, 50)); // ประตูวาร์ป test 2 go 3
-	warpPoint4.setPosition(sf::Vector2f(200, -1500));
-	warpPoint4.setFillColor(sf::Color::Black);
+	//sf::RectangleShape warpPoint4(sf::Vector2f(50, 50)); // ประตูวาร์ป test 2 go 3
+	//warpPoint4.setPosition(sf::Vector2f(200, -1500));
+	//warpPoint4.setFillColor(sf::Color::Black);
 
 	sf::RectangleShape warpPoint5(sf::Vector2f(180, 400)); // ประตูวาร์ปจากฉากที่ 3 ไป 4
 	warpPoint5.setPosition(sf::Vector2f(2950, -3000));
 	warpPoint5.setTexture(&doorwarp3);
 
-	sf::RectangleShape warpPoint6(sf::Vector2f(180, 400)); // // ประตูวาร์ป test 3 go 4
-	warpPoint6.setPosition(sf::Vector2f(200, -3200));
-	warpPoint6.setTexture(&doorwarp3);
+	//sf::RectangleShape warpPoint6(sf::Vector2f(180, 400)); // // ประตูวาร์ป test 3 go 4
+	//warpPoint6.setPosition(sf::Vector2f(200, -3200));
+	//warpPoint6.setTexture(&doorwarp3);
 
 	sf::RectangleShape warpPoint7(sf::Vector2f(200, 400)); // ประตูวาร์ปจากฉากที่ 4 ไป 5
 	warpPoint7.setPosition(sf::Vector2f(2900, -4600));
 	warpPoint7.setTexture(&doorwarp4);
 
+
 	vector<pair<int, string>> ScoreBoard;
-	int cnt = 0;
+	int cnt = 0; //highscore
+
 
 	float deltaTime = 0.0f;
 	sf::Clock clock;
 	bool menustate = true;
-	
+
 	while(window.isOpen())
 	{
 		deltaTime = clock.restart().asSeconds();
@@ -656,38 +649,9 @@ int main()
 			}
 		}
 		
-		sf::RectangleShape object;
-		object.setSize(sf::Vector2f(300.0f, 70.0f));
-		object.setOrigin(sf::Vector2f(150.0f, 35.0f));
-		object.setPosition(sf::Vector2f(800, 450.0f));
-
-		sf::RectangleShape cursor;
-		cursor.setSize(sf::Vector2f(5.0f, 64.0f));
-		cursor.setOrigin(sf::Vector2f(2.5f, 32.0f));
-		cursor.setPosition(sf::Vector2f(655, 450.0f));
-		cursor.setFillColor(sf::Color::Black);
-
-		float totalTime = 0;
-		//sf::Clock clock;
-		bool state = false;
-
-		char last_char = ' ';
-
-		std::string input;
-
-		sf::Font font;
-		font.loadFromFile("Font/ROGFonts-Regular.otf"); //// <- Enter font here
-
-		sf::Text text;
-		text.setFont(font);
-		text.setCharacterSize(40);
-		text.setFillColor(sf::Color::Black);
-		text.setPosition(650, 425);
-
-
-			
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////// หน้า Menu /////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
 		if (menustate == true) {
 			///// ปุ่ม หน้า MENU ///////
 			sf::RectangleShape button1(sf::Vector2f(300, 150)); //button play
@@ -700,7 +664,7 @@ int main()
 			button3.setPosition(sf::Vector2f(40, 520));
 			button3.setTexture(&buttonhighscore);
 			sf::RectangleShape button4(sf::Vector2f(100, 50)); //button returnmenu 
-			button4.setPosition(sf::Vector2f(980, 650));
+			button4.setPosition(sf::Vector2f(20, 20));
 			button4.setTexture(&buttonreturnmenu);
 			sf::RectangleShape button5(sf::Vector2f(295, 150)); //button exit
 			button5.setPosition(sf::Vector2f(750, 520));
@@ -772,8 +736,8 @@ int main()
 				nameText.setFont(font);
 				nameText.setFillColor(sf::Color::White);
 				nameText.setCharacterSize(14);
-				nameText.setPosition(view.getCenter().x + 100, 680);
-				nameString = " Nonthicha  Sukcharoen ";
+				nameText.setPosition(view.getCenter().x + 50, 680);
+				nameString = " 63010484 : Nonthicha  Sukcharoen ";
 				nameText.setString(nameString);
 
 
@@ -880,7 +844,7 @@ int main()
 				}
 
 			}
-			//////////////////////////////////////////////////////////////////////////////////////////////////// หน้า ใส่ name /////////////////////////////////////////////////////////////////////////////////////////////////////////
+			/////////////////////////////////////////////////////////////////////////////////////////// หน้า Input your name /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 			if (x == 7)
 			{
@@ -910,16 +874,14 @@ int main()
 			}
 		}
 		//////////////////////////////////////////////////////////////////////////////////////////////////// หน้า Start เข้า Game /////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
 		if (menustate == false) {
 			if (x == 3)
 			{
 
-
-				printf("x = %.f  y = %.f\n", player.GetPosition().x, player.GetPosition().y);
+				//printf("x = %.f  y = %.f\n", player.GetPosition().x, player.GetPosition().y); //ตำเเหน่ง Position
 
 				player.Update(deltaTime);
-
-
 				sf::Vector2f direction; // direction player
 
 				sf::Vector2f directionM; // direction boss
@@ -942,7 +904,6 @@ int main()
 
 
 				/// check player เดินชน enemy เเล้วพลังชีวิตลด///
-
 				for (size_t i = 0; i < enemys.size(); i++)
 				{
 					if (player.GetCollider().CheckCollision(enemys[i].GetCollider(), direction, 0.0f))
@@ -955,13 +916,12 @@ int main()
 				}
 				if (life <= 0)
 				{
-					printf("Dead!!");
+					//printf("Dead!!");
 					x = 5;
 					menustate = true;
 				}
 
 				/// check กระสุน ยิงโดน enemy เเล้ว enemy ตาย + คะเเนนเพิ่มขึ้น ///
-
 				for (size_t i = 0; i < enemys.size(); i++)
 				{
 					for (size_t j = 0; j < vbullet.size(); j++)
@@ -970,7 +930,7 @@ int main()
 						{
 							enemys[i].hp -= player.dmg;
 							vbullet.erase(vbullet.begin() + j);
-							printf(" hit");
+							//printf(" hit");
 							if (enemys[i].hp <= 0)
 							{
 								enemyhurtSound.play();
@@ -1022,7 +982,10 @@ int main()
 
 				}
 
-
+				/// คีย์ลัด ///
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
+					player.setPosition(sf::Vector2f(2500.0f, -5640.0f));
+				}
 				///////////////////////////////////////////////////////////check ชน //////////////////////////////////////////////////////////////////////
 
 				///////////////////////////////////////////////////////		check ชน blockcoin	 //////////////////////////////////////////////////
@@ -1032,7 +995,7 @@ int main()
 						player.OnCollision(direction);
 						if (platform.getBlockType() == 1 && platform.getPosition().y + 55 <= player.GetPosition().y) { // 1 = ชน
 							jumpSound.play();
-							printf("\n\coin");
+							//printf("\n\coin");
 							sf::Vector2f platformPos = platform.getPosition();
 							platforms.erase(platforms.begin() + coin);
 							coins.push_back(Coin(&coinTexture, sf::Vector2u(10, 1), 0.1f, sf::Vector2f(40.0f, 40.0f), platformPos));
@@ -1209,7 +1172,9 @@ int main()
 					player.OnCollision(direction);
 				}
 
+
 				///////////////////////////////////////////////////////////	 ฉากกั้น ///////////////////////////////////////////////////////////////////////////
+				
 				if (Partition.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) //ฉากกั้นที่ 1 ล่องหน
 					player.OnCollision(direction);
 				if (Partition2.GetCollider().CheckCollision(player.GetCollider(), direction, 1.0f)) //ฉากกั้นที่ 2 ล่องหน
@@ -1223,8 +1188,8 @@ int main()
 
 
 
-
 				//////////////////////////////////////////////////////////// Player view ///////////////////////////////////////////////////////////
+				
 				if (player.GetPosition().x >= -418 && player.GetPosition().x <= 2800) //ล็อคฉากที่ 1 ไม่ให้เลื่อนเกิน ด้านซ้าย && ด้านขวา (ให้อยุ่กลางจอ) && player.GetPosition().x <= 824
 				{
 					view.setCenter(player.GetPosition().x, player.GetPosition().y); //ล็อคฉากไม่เคลื่อนขึ้นบน ,0
@@ -1321,7 +1286,7 @@ int main()
 						{
 							score += 5000;
 							BossBlood--;
-
+						
 						}
 					}
 				}
@@ -1350,21 +1315,21 @@ int main()
 				if (player.GetCollider().CheckCollision(Collider(warpPoint))) { //ประตูวาร์ปฉากที่ 1 ไปฉากที่ 2
 					player.setPosition(sf::Vector2f(-800, -1600));
 				}
-				if (player.GetCollider().CheckCollision(Collider(warpPoint2))) { //test 1 ไป 2 สี่เหลี่ยมสีเเดง
-					player.setPosition(sf::Vector2f(-500, -1500));
-				}
+				//if (player.GetCollider().CheckCollision(Collider(warpPoint2))) { //test 1 ไป 2 สี่เหลี่ยมสีเเดง
+				//	player.setPosition(sf::Vector2f(-500, -1500));
+				//}
 				if (player.GetCollider().CheckCollision(Collider(warpPoint3))) { //ประตูวาร์ปฉากที่ 2 ไปฉากที่ 3
 					player.setPosition(sf::Vector2f(-700, -2650));
 				}
-				if (player.GetCollider().CheckCollision(Collider(warpPoint4))) { //test 2 go 3 black 
-					player.setPosition(sf::Vector2f(-300, -3500));
-				}
+				//if (player.GetCollider().CheckCollision(Collider(warpPoint4))) { //test 2 go 3 black 
+				//	player.setPosition(sf::Vector2f(-300, -3500));
+				//}
 				if (player.GetCollider().CheckCollision(Collider(warpPoint5))) { //ประตูวาร์ปฉากที่ 3 ไปฉากที่ 4
 					player.setPosition(sf::Vector2f(-700, -4200));
 				}
-				if (player.GetCollider().CheckCollision(Collider(warpPoint6))) { //ประตูวาร์ปฉากที่ 3 ไปฉากที่ 4
-					player.setPosition(sf::Vector2f(-700, -5150));
-				}
+				//if (player.GetCollider().CheckCollision(Collider(warpPoint6))) { //ประตูวาร์ปฉากที่ 3 ไปฉากที่ 4
+				//	player.setPosition(sf::Vector2f(-700, -5150));
+				//}
 				if (player.GetCollider().CheckCollision(Collider(warpPoint7))) { //ประตูวาร์ปฉากที่ 4 ไปฉากที่ 5
 					player.setPosition(sf::Vector2f(-700, -6100));
 				}
@@ -1387,7 +1352,7 @@ int main()
 				scoreText.setFont(font);
 				scoreText.setCharacterSize(25);
 				scoreText.setFillColor(sf::Color::Red);
-				scoreText.setOutlineColor(sf::Color::Black);
+				scoreText.setOutlineColor(sf::Color::White);
 				scoreText.setOutlineThickness(1.0f);
 				std::stringstream ss;
 				scoreText.setPosition(player.GetPosition().x + 120, player.GetPosition().y - 320); //+120 -320
@@ -1400,7 +1365,7 @@ int main()
 				std::string lifeString;
 				lifeText.setFont(font);
 				lifeText.setFillColor(sf::Color::Red);
-				lifeText.setOutlineColor(sf::Color::Black);
+				lifeText.setOutlineColor(sf::Color::White);
 				lifeText.setOutlineThickness(1.0f);
 				lifeText.setCharacterSize(25);
 				lifeText.setPosition(player.GetPosition().x - 300, player.GetPosition().y - 320);
@@ -1413,7 +1378,7 @@ int main()
 				std::string keyString;
 				keyText.setFont(font);
 				keyText.setFillColor(sf::Color::Red);
-				keyText.setOutlineColor(sf::Color::Black);
+				keyText.setOutlineColor(sf::Color::White);
 				keyText.setOutlineThickness(1.0f);
 				keyText.setCharacterSize(25);
 				keyText.setPosition(player.GetPosition().x - 300, player.GetPosition().y - 290);
@@ -1435,8 +1400,7 @@ int main()
 				window.draw(lifeText);
 				window.draw(keyText);
 
-				/// 
-
+			
 
 				player.Draw(window);
 

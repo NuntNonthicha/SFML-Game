@@ -44,7 +44,7 @@ void Player::Update(float deltaTime)
 		row = 1;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		velocity.x += 1.5 * speed * 2.0f;
+		velocity.x += 1.51 * speed * 2.0f;
 		faceRight = true;
 		row = 1;
 	}
